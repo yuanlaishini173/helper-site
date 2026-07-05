@@ -3,6 +3,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/>
+<script>
+  // 尽早禁止浏览器自动恢复滚动位置
+  if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+  }
+</script>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>职业技能证书查询指南（江苏版） - 官方渠道大全</title>
 <meta content="江苏省职业技能等级证书、职业资格证书查询官方渠道大全，包含国家级、省级网站、APP、小程序等所有查询入口，一键直达。" name="description"/>
@@ -1488,6 +1494,12 @@
       </div>
 </div>
 </footer><script>
+    // 禁止浏览器自动恢复滚动位置，确保每次刷新都从顶部开始
+    if (history.scrollRestoration) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     function toggleMenu() {
       const navLinks = document.getElementById('navLinks');
       navLinks.classList.toggle('open');

@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -680,10 +680,9 @@
     }
 
     /* 滚动动画 */
-    
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+    .scroll-reveal {
+      opacity: 1;
+      transform: translateY(0);
     }
     .scroll-reveal.revealed {
       opacity: 1;
@@ -783,33 +782,42 @@
             </div>
           </div>
           <p class="card-desc">
-            人社部官方指定的全国统一查询平台，可查询职业技能等级证书和技能人员职业资格证书。
+            人社部官方指定的全国统一查询平台，可查询职业技能等级证书和技能人员职业资格证书。<br>
+            <strong style="color: #c41e3a;">⚠️ 2025年12月1日起新版查询功能上线，需实名注册登录后方可查询。</strong>
           </p>
           <div class="card-steps">
-            <div class="card-steps-title">📌 方式一：直接输入信息查询</div>
+            <div class="card-steps-title">📌 方式一：登录后查看本人所有证书（推荐）</div>
             <ol>
-              <li>打开网站：<a href="http://zscx.osta.org.cn" target="_blank" style="color: #1890ff;">zscx.osta.org.cn</a></li>
-              <li>在首页选择你要查的证书类型（职业技能等级证书 / 技能人员职业资格证书）</li>
-              <li>按页面提示输入查询信息（姓名、证件号码、证书编号等）</li>
-              <li>输入验证码，点击「查询」按钮</li>
-              <li>即可看到证书详细信息</li>
+              <li>打开技能人才评价工作网：<a href="http://osta.mohrss.gov.cn" target="_blank" style="color: #1890ff;">osta.mohrss.gov.cn</a></li>
+              <li>在首页找到「证书查询」模块</li>
+              <li>选择对应的查询系统：
+                <ul style="margin: 6px 0 6px 20px;">
+                  <li>技能人员职业资格证书全国联网查询系统</li>
+                  <li>职业技能等级证书全国联网查询系统</li>
+                </ul>
+              </li>
+              <li>点击「新版查询」，跳转到人社部用户中心登录页</li>
+              <li>实名注册并登录（账号密码 / 电子社保卡 / 掌上12333）</li>
+              <li>登录后可查看本人名下所有证书完整信息</li>
             </ol>
           </div>
           <div class="card-steps">
-            <div class="card-steps-title">📌 方式二：登录后查看所有证书</div>
+            <div class="card-steps-title">📌 方式二：查询他人证书（需三项信息）</div>
             <ol>
-              <li>点击页面右上角「登录」</li>
-              <li>选择登录方式：账号密码 / 电子社保卡扫码 / 掌上12333扫码</li>
-              <li>登录后进入个人中心</li>
-              <li>找到「我的证书」或「证书查询」栏目</li>
-              <li>可查看你名下所有的证书列表</li>
+              <li>实名登录后，选择「证书查询」功能</li>
+              <li>输入对方的<strong>姓名、证件号码、证书编号</strong>三项信息</li>
+              <li>查询结果为脱敏处理（隐藏部分信息）</li>
+              <li>如持有对方的<strong>证书查询授权码</strong>，可查看完整信息</li>
+              <li>个人用户单次限查1本，单日上限100本（次）</li>
             </ol>
           </div>
           <ul class="card-info-list">
             <li><strong>覆盖范围：</strong>全国所有经备案机构颁发的证书</li>
             <li><strong>数据来源：</strong>人社部官方数据库</li>
+            <li><strong>重要时间：</strong>2026年3月1日起旧版查询停用，统一使用新版</li>
+            <li><strong>授权码：</strong>个人可生成授权码授权他人查询，有效期1年</li>
           </ul>
-          <a href="http://zscx.osta.org.cn" target="_blank" class="card-btn">立即查询 →</a>
+          <a href="http://osta.mohrss.gov.cn" target="_blank" class="card-btn">前往查询 →</a>
         </div>
 
         <div class="query-card scroll-reveal">
@@ -838,7 +846,7 @@
           </div>
           <ul class="card-info-list">
             <li><strong>需要登录：</strong>是（需注册并实名认证）</li>
-            <li><strong>特点：</strong>
+            <li><strong>特点：</strong>功能最全，可办理各种人社业务</li>
             <li><strong>说明：</strong>与技能人才评价证书全国联网查询为同一数据端口，数据完全一致</li>
           </ul>
           <a href="https://www.12333.gov.cn" target="_blank" class="card-btn-outline">前往平台 →</a>
@@ -887,25 +895,37 @@
             </div>
           </div>
           <p class="card-desc">
-            中国就业培训技术指导中心主办，提供技能人才评价相关信息和查询入口。
+            中国就业培训技术指导中心主办，提供技能人才评价相关信息和查询入口。新版证书查询功能已于2025年12月1日上线。
           </p>
           <div class="card-steps">
-            <div class="card-steps-title">📌 操作步骤</div>
+            <div class="card-steps-title">📌 证书查询入口</div>
             <ol>
-              <li>打开网站：<a href="https://www.osta.org.cn" target="_blank" style="color: #1890ff;">www.osta.org.cn</a></li>
-              <li>在首页找到「证书查询」区域</li>
-              <li>点击「技能人员职业资格证书全国联网查询系统」或「职业技能等级证书全国联网查询系统」</li>
-              <li>会跳转到 zscx.osta.org.cn 查询页面</li>
-              <li>按页面提示输入查询信息（姓名、证件号、证书编号等）</li>
-              <li>输入验证码，点击查询</li>
+              <li>打开网站：<a href="http://osta.mohrss.gov.cn" target="_blank" style="color: #1890ff;">osta.mohrss.gov.cn</a></li>
+              <li>在首页找到「技能人才评价服务窗口」-「证书查询」区域</li>
+              <li>两个查询系统可选：
+                <ul style="margin: 6px 0 6px 20px;">
+                  <li><strong>技能人员职业资格证书</strong>全国联网查询系统</li>
+                  <li><strong>职业技能等级证书</strong>全国联网查询系统</li>
+                </ul>
+              </li>
+              <li>每个系统都有「新版查询」和「旧版查询」两个入口</li>
+              <li>点击「新版查询」，实名登录后即可查询</li>
             </ol>
+          </div>
+          <div class="card-steps" style="background: #fff3e0; border-left-color: #ff9800;">
+            <div class="card-steps-title" style="color: #e65100;">⏰ 时间节点提醒</div>
+            <ul style="list-style: none; padding: 0;">
+              <li style="padding: 4px 0;">✅ <strong>2025年12月1日</strong>：新版查询功能上线</li>
+              <li style="padding: 4px 0;">🔄 <strong>2025.12.1 - 2026.2.28</strong>：新、旧版并行</li>
+              <li style="padding: 4px 0;">❌ <strong>2026年3月1日起</strong>：旧版停用，统一用新版</li>
+            </ul>
           </div>
           <ul class="card-info-list">
             <li><strong>主要功能：</strong>评价机构查询、职业标准查询、证书查询入口</li>
-            <li><strong>特点：</strong>功能最全，可办理各种人社业务</li>             <li><strong>说明：</strong>与技能人才评价证书全国联网查询为同一数据端口，数据完全一致</li>
+            <li><strong>特点：</strong>政策信息最全，可查询评价机构资质</li>
             <li><strong>说明：</strong>技能人才评价证书全国联网查询与全国人社政务服务平台为同一数据端口，数据完全一致</li>
           </ul>
-          <a href="https://www.osta.org.cn" target="_blank" class="card-btn-outline">前往网站 →</a>
+          <a href="http://osta.mohrss.gov.cn" target="_blank" class="card-btn-outline">前往网站 →</a>
         </div>
       </div>
     </div>
@@ -1462,26 +1482,33 @@
             🌐 方法三：全国联网查询（所有省份都能用）
             <span class="lost-method-badge">全国通用</span>
           </div>
-          <div class="lost-method-desc">国家级平台，在外地考的证也能查，有两种查询方式</div>
+          <div class="lost-method-desc">国家级平台，在外地考的证也能查。2025年12月1日起新版查询上线，需实名登录</div>
+          <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 14px; color: #e65100;">
+            <strong>⚠️ 重要提醒：</strong>2025年12月1日起新版证书查询功能上线，<strong>必须实名注册登录</strong>后才能查询。2026年3月1日起旧版查询停用。
+          </div>
 
-          <div class="lost-sub-title">方式 A：输入信息直接查</div>
+          <div class="lost-sub-title">方式 A：登录后查本人证书（推荐，能看到所有证书）</div>
           <ol class="lost-steps">
-            <li>打开网站：<strong>技能人才评价证书全国联网查询</strong>（zscx.osta.org.cn）</li>
-            <li>在首页找到<strong>证书查询</strong>表单</li>
-            <li>按页面提示输入查询信息（姓名、证件号、证书编号等）</li>
-            <li>点击<strong>「查询」</strong>按钮，就能看到证书信息</li>
-          </ol>
-
-          <div class="lost-sub-title">方式 B：登录后查（推荐，能看到所有证书）</div>
-          <ol class="lost-steps">
-            <li>点击<strong>「个人登录」</strong>，跳转到全国 12333 统一登录</li>
+            <li>打开<strong>技能人才评价工作网</strong>（osta.mohrss.gov.cn）</li>
+            <li>在首页找到「证书查询」区域</li>
+            <li>选择对应的查询系统（职业资格证书 / 职业技能等级证书）</li>
+            <li>点击<strong>「新版查询」</strong>，跳转到人社部用户中心</li>
             <li>没有账号的先<strong>注册</strong>，用身份证号和手机号注册</li>
             <li>完成<strong>实名认证</strong>（人脸识别）</li>
-            <li>登录后就能查看你的<strong>所有证书列表</strong></li>
+            <li>登录后就能查看你的<strong>所有证书完整信息</strong></li>
           </ol>
-          <div class="lost-tip">💡 也可以用「掌上12333」APP 或「12333」微信小程序查询，账号通用</div>
+
+          <div class="lost-sub-title">方式 B：查询他人证书（需三项信息）</div>
+          <ol class="lost-steps">
+            <li>实名登录后，选择证书查询功能</li>
+            <li>输入对方的<strong>姓名、证件号码、证书编号</strong>三项信息</li>
+            <li>查询结果为<strong>脱敏处理</strong>（隐藏部分信息）</li>
+            <li>如有<strong>证书查询授权码</strong>，可查看完整信息</li>
+            <li>个人用户单次限查1本，单日上限100本</li>
+          </ol>
+          <div class="lost-tip">💡 也可以用「掌上12333」APP 或「电子社保卡」小程序查询，账号通用</div>
           <br>
-          <a href="http://zscx.osta.org.cn" target="_blank" class="card-btn-outline">直达全国联网查询 →</a>
+          <a href="http://osta.mohrss.gov.cn" target="_blank" class="card-btn-outline">直达技能人才评价工作网 →</a>
         </div>
 
         <div class="lost-method">
@@ -1504,11 +1531,15 @@
             📝 方法五：江苏证书遗失补办、信息更正及证明打印
             <span class="lost-method-badge">江苏专用</span>
           </div>
-          <div class="
+          <div class="lost-method-desc">江苏省人力资源和社会保障厅网上办事服务大厅提供完整的证书服务，包括遗失补办、信息更正、证明打印等</div>
           
           <div style="background: #f0f7ff; border-left: 4px solid #1890ff; padding: 16px; margin: 16px 0; border-radius: 0 8px 8px 0;">
             <strong>📌 办理入口：</strong>江苏省人力资源和社会保障厅网上办事服务大厅<br>
             <a href="https://rs.jshrss.jiangsu.gov.cn/index/" target="_blank" style="color: #1890ff; text-decoration: underline;">https://rs.jshrss.jiangsu.gov.cn/index/</a>
+          </div>
+
+          <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 16px; margin: 16px 0; border-radius: 0 8px 8px 0;">
+            <strong>⚠️ 重要说明：</strong>现在证书补办完成后，统一发放<strong>电子证明（电子证书/获证证明）</strong>，不再发放纸质证书。补办审核通过后，需个人登录网上办事服务大厅，在「补换证书信息查询」中自行下载打印。
           </div>
 
           <h4 style="color: #c41e3a; margin-top: 20px; margin-bottom: 12px;">一、技能人员职业资格证书、专项职业能力证书遗失补办</h4>
@@ -1520,7 +1551,7 @@
             <li>点击右侧的<strong>「申报」</strong>按钮</li>
             <li>进入申报环节后，选择你所在的城市/地区</li>
             <li>按要求填写申请信息，提交补办申请</li>
-            <li></li>
+            <li>等待审核通过后，在「补换证书信息查询」中自行下载电子证明</li>
           </ol>
 
           <h4 style="color: #c41e3a; margin-top: 20px; margin-bottom: 12px;">二、技能人员职业资格证书、专项职业能力证书信息更正</h4>
@@ -1557,6 +1588,7 @@
             <li>如果查不到，可能是数据还在上传中，一般考试后 <strong>30-45 个工作日</strong>才能查到</li>
             <li>省级平台（江苏人社）的数据一般比国家级平台更新得<strong>更快</strong>一些</li>
             <li>确实查不到的，可以拨打<strong>12333</strong>人社服务热线咨询（工作日工作时间）</li>
+            <li>现在补办证书<strong>只发电子证明</strong>，不再发放纸质证书，个人下载打印即可使用</li>
             <li>电子证书和纸质证书<strong>法律效力一样</strong>，不用特意补办纸质证书</li>
           </ol>
         </div>
@@ -1611,10 +1643,10 @@
           </div>
           <div class="faq-answer">
             <p>最可靠的方法就是在<strong>官方渠道查询</strong>：</p>
-            <p>1. 优先查「技能人才评价证书全国联网查询系统」（zscx.osta.org.cn），能查到就是真的<br>
+            <p>1. 优先查「技能人才评价证书全国联网查询系统」（osta.mohrss.gov.cn 技能人才评价工作网 → 证书查询 → 新版查询），能查到就是真的<br>
             2. 也可以扫证书上的二维码验证<br>
             3. 查不到的可以联系发证机构核实</p>
-            <p><strong>⚠️ 重要提醒：</strong>凡是说"免考包过""快速取证"的基本都是骗局，正规证书必须本人参加考试！所有官方查询渠道都是免费的！</p>
+            <p><strong>⚠️ 重要提醒：</strong>凡是说"免考包过""快速取证"的基本都是骗局，正规证书必须本人参加考试！所有官方查询渠道都是免费的！新版查询需实名注册登录。</p>
           </div>
         </div>
 
@@ -1691,4 +1723,32 @@
       }
     }
 
-    if (localStorage.getItem('font-size') === '
+    if (localStorage.getItem('font-size') === 'large') {
+      document.body.classList.add('large-font');
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.querySelector('.font-toggle-btn');
+        if (btn) btn.textContent = '🔤 标准字体';
+      });
+    }
+
+    // 确保所有内容都显示
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.scroll-reveal').forEach(el => {
+        el.classList.add('revealed');
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    });
+
+    // 如果DOM已经加载完成，立即执行
+    if (document.readyState !== 'loading') {
+      document.querySelectorAll('.scroll-reveal').forEach(el => {
+        el.classList.add('revealed');
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    }
+  </script>
+
+</body>
+</html>

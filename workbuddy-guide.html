@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkBuddy 完全入门指南 | 从零开始掌握 AI 智能体工作台</title>
+  <meta name="description" content="最全面的 WorkBuddy 入门教程，从安装登录到技能配置、微信远程操控、定时任务，结合视频创作场景，带你快速上手这款 AI 办公神器。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0F0F1A;
+      color: #E5E7EB;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      line-height: 1.2;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .text-gradient-amber {
+      background: linear-gradient(135deg, #FFB547 0%, #FF7A00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-gradient-rainbow {
+      background: linear-gradient(135deg, #FFB547 0%, #00D4AA 50%, #9B5DE5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-gradient-blue {
+      background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .bg-gradient-hero {
+      background: linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%);
+    }
+    .bg-glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.1); }
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slide-in-left {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slide-in-right {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-fade-up {
+      animation: fade-up 0.8s ease forwards;
+    }
+    .delay-100 { animation-delay: 0.1s; opacity: 0; }
+    .delay-200 { animation-delay: 0.2s; opacity: 0; }
+    .delay-300 { animation-delay: 0.3s; opacity: 0; }
+    .delay-400 { animation-delay: 0.4s; opacity: 0; }
+    .delay-500 { animation-delay: 0.5s; opacity: 0; }
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(15, 15, 26, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .navbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #FFB547 0%, #FF7A00 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: #9CA3AF;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover {
+      color: #FFB547;
+    }
+    .nav-cta {
+      padding: 8px 20px;
+      background: linear-gradient(135deg, #FFB547 0%, #FF7A00 100%);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0F0F1A !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(255, 122, 0, 0.3);
+    }
+    .hero {
+      position: relative;
+      padding: 160px 0 120px;
+      overflow: hidden;
+    }
+    .hero-bg-orbs {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+    }
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: #FF7A00;
+      top: -100px;
+      right: -100px;
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: #9B5DE5;
+      bottom: 100px;
+      left: -100px;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: #00D4AA;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse-slow 6s ease-in-out infinite;
+    }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 181, 71, 0.1);
+      border: 1px solid rgba(255, 181, 71, 0.2);
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #FFB547;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      font-size: 18px;
+      color: #9CA3AF;
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #FFB547 0%, #FF7A00 100%);
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #0F0F1A;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(255, 122, 0, 0.35);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #E5E7EB;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 60px;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: #6B7280;
+    }
+    section {
+      padding: 100px 0;
+    }
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 64px;
+    }
+    .section-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(255, 181, 71, 0.1);
+      border: 1px solid rgba(255, 181, 71, 0.2);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #FFB547;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .section-header h2 {
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .section-header p {
+      font-size: 17px;
+      color: #9CA3AF;
+      line-height: 1.7;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 181, 71, 0.2);
+      transform: translateY(-4px);
+    }
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+    .feature-icon.amber { background: rgba(255, 181, 71, 0.15); }
+    .feature-icon.blue { background: rgba(96, 165, 250, 0.15); }
+    .feature-icon.purple { background: rgba(155, 93, 229, 0.15); }
+    .feature-icon.green { background: rgba(0, 212, 170, 0.15); }
+    .feature-icon.pink { background: rgba(244, 114, 182, 0.15); }
+    .feature-icon.cyan { background: rgba(34, 211, 238, 0.15); }
+    .feature-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .feature-card p {
+      font-size: 15px;
+      color: #9CA3AF;
+      line-height: 1.7;
+    }
+    .about-section {
+      position: relative;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .about-content h2 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .about-content p {
+      font-size: 16px;
+      color: #9CA3AF;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .about-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .about-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 15px;
+      color: #D1D5DB;
+    }
+    .check-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      background: rgba(0, 212, 170, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #00D4AA;
+    }
+    .about-visual {
+      position: relative;
+    }
+    .workbuddy-mockup {
+      background: linear-gradient(135deg, rgba(255, 181, 71, 0.1), rgba(155, 93, 229, 0.1));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 24px;
+      position: relative;
+    }
+    .mockup-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .mockup-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .mockup-dot.red { background: #FF5F57; }
+    .mockup-dot.yellow { background: #FEBC2E; }
+    .mockup-dot.green { background: #28C840; }
+    .mockup-chat {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .chat-bubble {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #FFB547 0%, #FF7A00 100%);
+      color: #0F0F1A;
+      font-weight: 500;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.ai {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #E5E7EB;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-avatar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #6B7280;
+      margin-bottom: 4px;
+    }
+    .chat-avatar-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFB547 0%, #FF7A00 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+    .steps-section {
+      background: linear-gradient(180deg, rgba(255, 181, 71, 0.02) 0%, transparent 100%);
+    }
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .step-item {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+    .step-number {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #FFB547 0%, #FF7A00 100%);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #0F0F1A;
+    }
+    .step-content {
+      flex: 1;
+    }
+    .step-content h3 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .step-content p {
+      font-size: 15px;
+      color: #9CA3AF;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    .step-tips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .step-tip {
+      padding: 4px 12px;
+      background: rgba(255, 181, 71, 0.1);
+      border: 1px solid rgba(255, 181, 71, 0.15);
+      border-radius: 100px;
+      font-size: 13px;
+      color: #FFB547;
+    }
+    .scenarios-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .scenario-card {
+      padding: 28px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+    .scenario-card:hover {
+      border-color: rgba(96, 165, 250, 0.2);
+      background: rgba(96, 165, 250, 0.03);
+    }
+    .scenario-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .scenario-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .scenario-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .scenario-card p {
+      font-size: 14px;
+      color: #9CA3AF;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .scenario-prompt {
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 3px solid #60A5FA;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: #D1D5DB;
+      line-height: 1.6;
+      font-family: 'Inter', monospace;
+    }
+    .tips-section {
+      background: linear-gradient(180deg, transparent 0%, rgba(155, 93, 229, 0.02) 50%, transparent 100%);
+    }
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .tip-card {
+      padding: 32px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .tip-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #9B5DE5, #00D4AA);
+    }
+    .tip-number {
+      font-size: 48px;
+      font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #9B5DE5 0%, #00D4AA 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .tip-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .tip-card p {
+      font-size: 15px;
+      color: #9CA3AF;
+      line-height: 1.7;
+    }
+    .pitfalls-section {
+      background: linear-gradient(180deg, rgba(239, 68, 68, 0.02) 0%, transparent 100%);
+    }
+    .pitfalls-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .pitfall-card {
+      padding: 24px;
+      background: rgba(239, 68, 68, 0.03);
+      border: 1px solid rgba(239, 68, 68, 0.1);
+      border-radius: 16px;
+    }
+    .pitfall-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .pitfall-card h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #FCA5A5;
+    }
+    .pitfall-card p {
+      font-size: 14px;
+      color: #9CA3AF;
+      line-height: 1.6;
+    }
+    .timeline-section {
+      position: relative;
+    }
+    .timeline {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 32px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, #FFB547 0%, #9B5DE5 50%, #00D4AA 100%);
+      opacity: 0.3;
+    }
+    .timeline-item {
+      display: flex;
+      gap: 24px;
+      padding-bottom: 40px;
+      position: relative;
+    }
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+    .timeline-dot {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #0F0F1A;
+      border: 2px solid rgba(255, 181, 71, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #FFB547;
+      position: relative;
+      z-index: 1;
+    }
+    .timeline-content {
+      flex: 1;
+      padding-top: 16px;
+    }
+    .timeline-day {
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFB547;
+      margin-bottom: 6px;
+    }
+    .timeline-content h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .timeline-content p {
+      font-size: 15px;
+      color: #9CA3AF;
+      line-height: 1.7;
+    }
+    .timeline-tasks {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .timeline-task {
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      font-size: 12px;
+      color: #D1D5DB;
+    }
+    .faq-section {
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 212, 170, 0.02) 50%, transparent 100%);
+    }
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .faq-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .faq-item:hover {
+      border-color: rgba(0, 212, 170, 0.2);
+    }
+    .faq-question {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      user-select: none;
+    }
+    .faq-question:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .faq-toggle {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #00D4AA;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+    .faq-item.active .faq-toggle {
+      transform: rotate(45deg);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding: 0 24px 20px;
+    }
+    .faq-answer p {
+      font-size: 15px;
+      color: #9CA3AF;
+      line-height: 1.7;
+    }
+    .cta-section {
+      text-align: center;
+      padding: 120px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(255, 181, 71, 0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-content {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .cta-section h2 {
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .cta-section p {
+      font-size: 18px;
+      color: #9CA3AF;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+    footer {
+      padding: 60px 0 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .footer-text {
+      font-size: 14px;
+      color: #6B7280;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-size: 14px;
+      color: #6B7280;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover {
+      color: #FFB547;
+    }
+    @media (max-width: 968px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 38px; }
+      .hero p { font-size: 16px; }
+      .hero-stats { gap: 32px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .scenarios-grid { grid-template-columns: 1fr; }
+      .tips-grid { grid-template-columns: 1fr; }
+      .pitfalls-grid { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 30px; }
+      .about-content h2 { font-size: 28px; }
+      .cta-section h2 { font-size: 30px; }
+    }
+    @media (max-width: 640px) {
+      .hero { padding: 120px 0 80px; }
+      .hero h1 { font-size: 30px; }
+      section { padding: 70px 0; }
+      .step-item { flex-direction: column; gap: 16px; }
+      .timeline::before { left: 20px; }
+      .timeline-dot { width: 40px; height: 40px; font-size: 14px; }
+      .timeline-item { gap: 16px; }
+      .hero-stats { gap: 20px; }
+      .stat-number { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <div class="logo">
+        <div class="logo-icon">🤖</div>
+        <span>WorkBuddy 指南</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#features">核心功能</a></li>
+        <li><a href="#quickstart">快速上手</a></li>
+        <li><a href="#scenarios">实战场景</a></li>
+        <li><a href="#tips">使用技巧</a></li>
+        <li><a href="#timeline">学习路线</a></li>
+        <li><a href="#faq">常见问题</a></li>
+      </ul>
+      <a href="https://www.codebuddy.cn/work/" target="_blank" class="nav-cta">立即体验</a>
+    </div>
+  </nav>
+
+  <section class="hero bg-gradient-hero">
+    <div class="hero-bg-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge animate-fade-up">
+          <span>✨</span>
+          <span>腾讯出品 · AI 原生桌面智能体</span>
+        </div>
+        <h1 class="animate-fade-up delay-100">
+          <span class="text-gradient-amber">WorkBuddy</span> 完全入门指南
+        </h1>
+        <p class="animate-fade-up delay-200">
+          从安装登录到技能配置、微信远程操控、定时任务自动化，<br>
+          结合视频创作场景，带你从零开始掌握这款 AI 办公神器。
+        </p>
+        <div class="hero-buttons animate-fade-up delay-300">
+          <a href="#quickstart" class="btn-primary">
+            <span>🚀</span>
+            <span>开始学习</span>
+          </a>
+          <a href="https://www.codebuddy.cn/work/" target="_blank" class="btn-secondary">
+            <span>🌐</span>
+            <span>访问官网</span>
+          </a>
+        </div>
+        <div class="hero-stats animate-fade-up delay-400">
+          <div class="stat-item">
+            <div class="stat-number text-gradient-amber">5000</div>
+            <div class="stat-label">新用户积分</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number text-gradient-blue">6+</div>
+            <div class="stat-label">内置大模型</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number text-gradient-rainbow">100+</div>
+            <div class="stat-label">技能生态</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number text-gradient-green">5</div>
+            <div class="stat-label">远程操控渠道</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-content scroll-reveal">
+          <div class="section-tag">什么是 WorkBuddy</div>
+          <h2>你的 <span class="text-gradient-amber">AI 同事</span><br>不止是聊天机器人</h2>
+          <p>
+            WorkBuddy 是腾讯推出的 AI 原生桌面智能体工作台。它不是普通的聊天工具，
+            而是一个能<strong>真正帮你干活</strong>的 AI 助手——可以读取本地文件、
+            调用技能工具、远程接收指令、定时自动执行任务。
+          </p>
+          <ul class="about-list">
+            <li>
+              <div class="check-icon">✓</div>
+              <span><strong>零代码零部署</strong>：下载即用，无需复杂配置</span>
+            </li>
+            <li>
+              <div class="check-icon">✓</div>
+              <span><strong>本地文件处理</strong>：文档、表格、图片、音视频全能处理</span>
+            </li>
+            <li>
+              <div class="check-icon">✓</div>
+              <span><strong>微信远程操控</strong>：人不在电脑前也能指挥 AI 干活</span>
+            </li>
+            <li>
+              <div class="check-icon">✓</div>
+              <span><strong>技能生态丰富</strong>：像装 App 一样扩展 AI 能力</span>
+            </li>
+            <li>
+              <div class="check-icon">✓</div>
+              <span><strong>多模型切换</strong>：混元、DeepSeek、GLM、Kimi 任你选</span>
+            </li>
+          </ul>
+        </div>
+        <div class="about-visual scroll-reveal" style="animation-delay: 0.2s">
+          <div class="workbuddy-mockup">
+            <div class="mockup-header">
+              <div class="mockup-dot red"></div>
+              <div class="mockup-dot yellow"></div>
+              <div class="mockup-dot green"></div>
+            </div>
+            <div class="mockup-chat">
+              <div class="chat-bubble user">
+                帮我整理一下这个文件夹里的视频素材，按照景点分类
+              </div>
+              <div>
+                <div class="chat-avatar">
+                  <div class="chat-avatar-icon">🤖</div>
+                  <span>WorkBuddy</span>
+                </div>
+                <div class="chat-bubble ai">
+                  好的！我来扫描一下这个文件夹里的素材。<br><br>
+                  已识别 47 个文件，涉及 5 个景点：<br>
+                  • 黄山 (18个)<br>
+                  • 九寨沟 (12个)<br>
+                  • 张家界 (9个)<br>
+                  • 桂林 (5个)<br>
+                  • 西湖 (3个)<br><br>
+                  要按这个分类整理吗？我可以先给你一份预览清单确认。
+                </div>
+              </div>
+              <div class="chat-bubble user">
+                可以，先给我看看预览
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="container">
+      <div class="section-header scroll-reveal">
+        <div class="section-tag">核心功能</div>
+        <h2>六大能力，解锁 <span class="text-gradient-rainbow">AI 办公新体验</span></h2>
+        <p>从文件处理到远程操控，从技能扩展到定时自动化，WorkBuddy 全方位提升你的工作效率</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon amber">📁</div>
+          <h3>本地文件处理</h3>
+          <p>支持 Word、Excel、PPT、PDF、图片、音频、视频等多种格式。文件整理、批量重命名、文档摘要、表格清洗、报告生成，全都不在话下。</p>
+        </div>
+        <div class="feature-card scroll-reveal" style="transition-delay: 0.1s">
+          <div class="feature-icon blue">🧩</div>
+          <h3>Skills 技能生态</h3>
+          <p>像装 App 一样给 AI 装技能。网页搜索、PDF 处理、表格分析、视频下载、语音转写、知识库整理……技能市场持续扩展中。</p>
+        </div>
+        <div class="feature-card scroll-reveal" style="transition-delay: 0.2s">
+          <div class="feature-icon green">💬</div>
+          <h3>微信远程操控</h3>
+          <p>通过 Claw 功能绑定微信、企业微信、QQ、飞书、钉钉，人不在电脑前也能远程让 AI 帮你找文件、整理资料、查询数据。</p>
+        </div>
+        <div class="feature-card scroll-reveal" style="transition-delay: 0.3s">
+          <div class="feature-icon purple">⏰</div>
+          <h3>定时任务自动化</h3>
+          <p>用自然语言设定定时任务。每天早报、每周周报、每月数据复盘……让 AI 主动找你，而不是你追着 AI 跑。</p>
+        </div>
+        <div class="feature-card scroll-reveal" style="transition-delay: 0.4s">
+          <div class="feature-icon pink">🔄</div>
+          <h3>多模型自由切换</h3>
+          <p>内置混元、DeepSeek、GLM、Kimi、MiniMax 等多个大模型，无需自备 API Key。不同场景选不同模型，效果最优。</p>
+        </div>
+        <div class="feature-card scroll-reveal" style="transition-delay: 0.5s">
+          <div class="feature-icon cyan">🎭</div>
+          <h3>自定义 AI 身份</h3>
+          <p>给 AI 起名字、设定性格风格、记录你的偏好。让 AI 更懂你，每次对话都保持一致的风格，就像专属助理一样。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps-section" id="quickstart">
+    <div class="container">
+      <div class="section-header scroll-reveal">
+        <div class="section-tag">快速上手</div>
+        <h2>四步开启你的 <span class="text-gradient-amber">AI 协作之旅</span></h2>
+        <p>从零开始，只需 10 分钟就能上手 WorkBuddy</p>
+      </div>
+      <div class="steps-container">
+        <div class="step-item scroll-reveal">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>下载安装</h3>
+            <p>访问官网下载对应系统版本（支持 Windows 和 macOS）。双击安装包，按向导完成安装即可。建议勾选「创建桌面快捷方式」方便后续使用。</p>
+            <div class="step-tips">
+              <span class="step-tip">零安装启动</span>
+              <span class="step-tip">开箱即用</span>
+              <span class="step-tip">桌面快捷方式</span>
+            </div>
+          </div>
+        </div>
+        <div class="step-item scroll-reveal" style="transition-delay: 0.1s">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>登录 & 领积分</h3>
+            <p>打开 WorkBuddy，用微信扫码登录（首次需绑定手机号）。登录后第一件事：去领取 5000 新用户积分！访问个人中心或官网使用页面即可领取。</p>
+            <div class="step-tips">
+              <span class="step-tip">微信扫码登录</span>
+              <span class="step-tip">5000 积分免费领</span>
+              <span class="step-tip">每日签到得积分</span>
+            </div>
+          </div>
+        </div>
+        <div class="step-item scroll-reveal" style="transition-delay: 0.2s">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>授权文件夹 & 安装技能</h3>
+            <p>授权你常用的工作目录（建议只授权需要的文件夹，不要全盘授权）。然后进入技能市场，安装几个你需要的技能，比如网页搜索、PDF 处理、Excel 工具等。</p>
+            <div class="step-tips">
+              <span class="step-tip">按需授权目录</span>
+              <span class="step-tip">技能市场一键安装</span>
+              <span class="step-tip">办公套件默认安装</span>
+            </div>
+          </div>
+        </div>
+        <div class="step-item scroll-reveal" style="transition-delay: 0.3s">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>开始使用 & 配置远程操控</h3>
+            <p>先从简单的对话开始，让 AI 帮你整理文档、处理表格。熟练后配置 Claw 微信远程操控，以及定时任务 Automation，让 AI 成为你的 24 小时助手。</p>
+            <div class="step-tips">
+              <span class="step-tip">Ask 模式入门</span>
+              <span class="step-tip">微信 Claw 远程</span>
+              <span class="step-tip">定时任务自动化</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="scenarios">
+    <div class="container">
+      <div class="section-header scroll-reveal">
+        <div class="section-tag">实战场景</div>
+        <h2>结合 <span class="text-gradient-blue">视频创作</span> 的 6 个实战案例</h2>
+        <p>专为你的 YouTube 频道定制，从素材整理到脚本生成，全流程提效</p>
+      </div>
+      <div class="scenarios-grid">
+        <div class="scenario-card scroll-reveal">
+          <div class="scenario-header">
+            <div class="scenario-icon" style="background: rgba(255, 181, 71, 0.15);">📂</div>
+            <h3>素材文件夹整理</h3>
+          </div>
+          <p>让 AI 自动扫描你的素材目录，按景点名称分类归档，先给预览清单确认再执行移动，安全又高效。</p>
+          <div class="scenario-prompt">
+            请帮我整理 D:\视频素材\ 目录下的文件，按照景点名称分类归档。先输出一份文件清单表格给我确认，确认后再执行移动操作。
+          </div>
+        </div>
+        <div class="scenario-card scroll-reveal" style="transition-delay: 0.1s">
+          <div class="scenario-header">
+            <div class="scenario-icon" style="background: rgba(96, 165, 250, 0.15);">📝</div>
+            <h3>11段式脚本生成</h3>
+          </div>
+          <p>输入景点名称和参考资料，AI 自动生成标准化的 11 段式纪录片脚本，包含时长、旁白、画面、BGM建议。</p>
+          <div class="scenario-prompt">
+            请读取我上传的 3 篇黄山参考资料，生成一份 15 分钟的纪录片脚本，分为 11 段，每段包含：时长、旁白文案、画面描述、BGM风格建议。
+          </div>
+        </div>
+        <div class="scenario-card scroll-reveal" style="transition-delay: 0.2s">
+          <div class="scenario-header">
+            <div class="scenario-icon" style="background: rgba(155, 93, 229, 0.15);">📊</div>
+            <h3>视频数据分析</h3>
+          </div>
+          <p>读取你的视频数据 Excel 表格，自动生成数据分析报告，找出爆款规律，指导后续选题方向。</p>
+          <div class="scenario-prompt">
+            请读取这个 YouTube 数据表格，帮我分析：1) 播放量 Top 5 的视频共同点 2) 什么样的标题更容易爆 3) 给我 10 个选题建议。
+          </div>
+        </div>
+        <div class="scenario-card scroll-reveal" style="transition-delay: 0.3s">
+          <div class="scenario-header">
+            <div class="scenario-icon" style="background: rgba(0, 212, 170, 0.15);">🎙️</div>
+            <h3>采访记录整理</h3>
+          </div>
+          <p>把采访录音转写的文字稿丢给 AI，自动提取核心观点、金句摘录、可用素材片段和后续待办事项。</p>
+          <div class="scenario-prompt">
+            请读取这份采访记录.txt，帮我整理成结构化笔记：核心观点(3-5条)、金句摘录、可做视频素材的片段、后续待办事项。
+          </div>
+        </div>
+        <div class="scenario-card scroll-reveal" style="transition-delay: 0.4s">
+          <div class="scenario-header">
+            <div class="scenario-icon" style="background: rgba(244, 114, 182, 0.15);">📱</div>
+            <h3>微信远程查资料</h3>
+          </div>
+          <p>外出时用微信直接发消息给 AI，让它帮你找电脑里的某个文件、查数据、甚至开始处理任务。</p>
+          <div class="scenario-prompt">
+            帮我找一下电脑里「九寨沟」相关的素材文件夹，看看有多少个视频文件，总时长大概多少？我在外面，晚点回去看。
+          </div>
+        </div>
+        <div class="scenario-card scroll-reveal" style="transition-delay: 0.5s">
+          <div class="scenario-header">
+            <div class="scenario-icon" style="background: rgba(34, 211, 238, 0.15);">📅</div>
+            <h3>每周选题自动搜集</h3>
+          </div>
+          <p>设置定时任务，每周一早上自动搜集旅游热点、小众景点推荐，整理成选题清单发到你微信上。</p>
+          <div class="scenario-prompt">
+            帮我设置一个每周一早上 9 点的定时任务：搜索本周旅游热点和国内小众景点，整理成 10 个选题建议，每个选题附一句简介。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tips-section" id="tips">
+    <div class="container">
+      <div class="section-header scroll-reveal">
+        <div class="section-tag">使用技巧</div>
+        <h2>写好提示词的 <span class="text-gradient-rainbow">4 个黄金法则</span></h2>
+        <p>提示词写得好，AI 输出质量翻一倍。掌握这些技巧，让 WorkBuddy 更懂你</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card scroll-reveal">
+          <div class="tip-number">01</div>
+          <h3>给边界，不要太宽泛</h3>
+          <p>
+            ❌ 不好的："帮我做个视频"<br>
+            ✅ 好的："帮我生成一份黄山风景区的 15 分钟纪录片脚本，分为 11 段，每段要有旁白、画面描述和 BGM 建议，风格参考央视纪录片。"
+            <br><br>
+            <strong>越具体，输出越可控。</strong>把任务的背景、目标、格式、风格都说清楚。
+          </p>
+        </div>
+        <div class="tip-card scroll-reveal" style="transition-delay: 0.1s">
+          <div class="tip-number">02</div>
+          <h3>给材料，不要让它瞎编</h3>
+          <p>
+            ❌ 不好的："写一篇关于西湖的介绍"<br>
+            ✅ 好的："请读取我上传的 3 篇西湖参考资料，基于这些内容写一篇 2000 字的景点介绍，结构分为历史沿革、核心景观、文化底蕴三部分。"
+            <br><br>
+            <strong>素材决定质量。</strong>给 AI 喂优质的输入材料，它才能产出靠谱的结果。
+          </p>
+        </div>
+        <div class="tip-card scroll-reveal" style="transition-delay: 0.2s">
+          <div class="tip-number">03</div>
+          <h3>给模板，输出更标准</h3>
+          <p>
+            直接告诉 AI 你要的输出格式，比如：<br><br>
+            【标题】：xxx<br>
+            【时长】：xx 秒<br>
+            【画面描述】：xxx<br>
+            【旁白文案】：xxx<br>
+            【BGM 建议】：xxx
+            <br><br>
+            <strong>有模板才有标准化。</strong>特别是重复性工作，固定格式能大幅提升效率。
+          </p>
+        </div>
+        <div class="tip-card scroll-reveal" style="transition-delay: 0.3s">
+          <div class="tip-number">04</div>
+          <h3>分步走，降低出错率</h3>
+          <p>
+            复杂任务拆成几步，而不是一口气丢给 AI：<br><br>
+            1️⃣ 先让它读文件，说一下理解了什么<br>
+            2️⃣ 再让它生成大纲，你确认方向<br>
+            3️⃣ 最后才生成完整内容
+            <br><br>
+            <strong>分步确认比一次生成靠谱得多。</strong>前期多花 2 分钟，后期少改 10 分钟。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pitfalls-section">
+    <div class="container">
+      <div class="section-header scroll-reveal">
+        <div class="section-tag">避坑指南</div>
+        <h2>新手最容易踩的 <span class="text-gradient-amber">7 个坑</span></h2>
+        <p>提前知道这些，少走弯路，省下的积分都是钱</p>
+      </div>
+      <div class="pitfalls-grid">
+        <div class="pitfall-card scroll-reveal">
+          <div class="pitfall-icon">💰</div>
+          <h4>忘了领积分</h4>
+          <p>新用户 5000 积分不领白不领，注册后赶紧去个人中心领取，别等过期了才后悔。</p>
+        </div>
+        <div class="pitfall-card scroll-reveal" style="transition-delay: 0.05s">
+          <div class="pitfall-icon">📂</div>
+          <h4>全盘授权文件夹</h4>
+          <p>只授权你常用的工作目录就行，全盘授权既不安全也会让 AI 找文件时浪费时间和积分。</p>
+        </div>
+        <div class="pitfall-card scroll-reveal" style="transition-delay: 0.1s">
+          <div class="pitfall-icon">🔄</div>
+          <h4>签到断签</h4>
+          <p>连续签到 7 天有大额奖励，断了就要从头算。可以设个定时任务每天提醒你签到。</p>
+        </div>
+        <div class="pitfall-card scroll-reveal" style="transition-delay: 0.15s">
+          <div class="pitfall-icon">⚠️</div>
+          <h4>直接用 Craft 模式</h4>
+          <p>新手先用 Ask 模式，熟悉了再用 Craft。Craft 模式会直接修改你的文件，重要文件记得先备份。</p>
+        </div>
+        <div class="pitfall-card scroll-reveal" style="transition-delay: 0.2s">
+          <div class="pitfall-icon">⏰</div>
+          <h4>积分过期</h4>
+          <p>积分有有效期（90-180天），到期提醒比较滞后。建议自己记一下，别浪费了。</p>
+        </div>
+        <div class="pitfall-card scroll-reveal" style="transition-delay: 0.25s">
+          <div class="pitfall-icon">🔐</div>
+          <h4>微信发敏感信息</h4>
+          <p>远程操控虽然方便，但不要在微信里发密码、密钥等敏感信息，注意安全第一。</p>
+        </div>
+        <div class="pitfall-card scroll-reveal" style="transition-delay: 0.3s">
+          <div class="pitfall-icon">🧩</div>
+          <h4>技能装太多</h4>
+          <p>技能不是越多越好，装一堆用不上的反而会让 AI 困惑。先装 3-5 个核心技能，够用就行。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="timeline-section" id="timeline">
+    <div class="container">
+      <div class="section-header scroll-reveal">
+        <div class="section-tag">学习路线</div>
+        <h2>7 天入门 <span class="text-gradient-green">学习路线图</span></h2>
+        <p>按部就班，每天 30 分钟，一周就能熟练使用 WorkBuddy</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item scroll-reveal">
+          <div class="timeline-dot">D1</div>
+          <div class="timeline-content">
+            <div class="timeline-day">第 1 天 · 入门准备</div>
+            <h3>安装登录 & 熟悉界面</h3>
+            <p>下载安装 WorkBuddy，微信扫码登录，领取 5000 新用户积分，逛一逛界面，知道各个功能在哪里。</p>
+            <div class="timeline-tasks">
+              <span class="timeline-task">下载安装</span>
+              <span class="timeline-task">微信登录</span>
+              <span class="timeline-task">领取积分</span>
+              <span class="timeline-task">熟悉界面</span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-item scroll-reveal" style="transition-delay: 0.1s">
+          <div class="timeline-dot">D2</div>
+          <div class="timeline-content">
+            <div class="timeline-day">第 2-3 天 · 基础对话</div>
+            <h3>文件处理 & 安装技能</h3>
+            <p>授权工作文件夹，安装 3-5 个实用技能。练习让 AI 读取文件、整理文档、处理简单表格。先用 Ask 模式练手。</p>
+            <div class="timeline-tasks">
+              <span class="timeline-task">授权文件夹</span>
+              <span class="timeline-task">安装核心技能</span>
+              <span class="timeline-task">文档整理</span>
+              <span class="timeline-task">表格处理</span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-item scroll-reveal" style="transition-delay: 0.2s">
+          <div class="timeline-dot">D3</div>
+          <div class="timeline-content">
+            <div class="timeline-day">第 4-5 天 · 进阶功能</div>
+            <h3>微信远程操控</h3>
+            <p>配置 Claw 微信远程操控，体验一下出门在外也能指挥 AI 的感觉。试几个远程查询和文件操作的场景。</p>
+            <div class="timeline-tasks">
+              <span class="timeline-task">配置 Claw</span>
+              <span class="timeline-task">微信绑定</span>
+              <span class="timeline-task">远程查文件</span>
+              <span class="timeline-task">远程处理任务</span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-item scroll-reveal" style="transition-delay: 0.3s">
+          <div class="timeline-dot">D4</div>
+          <div class="timeline-content">
+            <div class="timeline-day">第 6-7 天 · 自动化</div>
+            <h3>定时任务 & 完整工作流</h3>
+            <p>设置 2-3 个定时任务（比如每日签到提醒、每周选题搜集），跑一个完整的小项目，从输入到输出全流程走一遍。</p>
+            <div class="timeline-tasks">
+              <span class="timeline-task">定时签到</span>
+              <span class="timeline-task">选题搜集</span>
+              <span class="timeline-task">完整项目实战</span>
+              <span class="timeline-task">总结复盘</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-header scroll-reveal">
+        <div class="section-tag">常见问题</div>
+        <h2><span class="text-gradient-blue">FAQ</span> 你可能想问的问题</h2>
+        <p>整理了新手最常问的问题，帮你快速解惑</p>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item scroll-reveal">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>WorkBuddy 是免费的吗？</span>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>WorkBuddy 使用积分（Credits）计费，不是完全免费的。但新用户注册送 5000 积分，每天签到还能领 100 积分，轻度使用基本够用。如果重度办公才需要充值。积分用完了也可以换其他免费工具继续用。</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-reveal" style="transition-delay: 0.05s">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>WorkBuddy 和 ChatGPT/Claude 有什么区别？</span>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>最大的区别是：ChatGPT/Claude 是"聊天机器人"，主要用来对话问答；而 WorkBuddy 是"桌面智能体"，能直接操作你电脑上的文件、调用各种技能工具、支持远程操控和定时任务。简单说，一个负责"说"，一个负责"干"。</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-reveal" style="transition-delay: 0.1s">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>我的文件会上传到云端吗？安全吗？</span>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>WorkBuddy 需要读取你的文件内容来处理任务，所以文件内容会经过模型处理。建议不要授权包含敏感信息的文件夹，重要文件先备份。官方承诺会保护用户隐私，但任何 AI 工具都存在一定风险，敏感内容谨慎使用。</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-reveal" style="transition-delay: 0.15s">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>积分怎么获得？有哪些免费途径？</span>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>免费获取积分的途径：1) 新用户注册送 5000 积分；2) 每日签到 100 积分，连续 7 天有大额奖励；3) 在腾讯云开发者社区发 WorkBuddy 相关文章，一篇 500-1000 积分，被精选额外 2000 积分；4) 邀请好友，双方各得 500 积分。</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-reveal" style="transition-delay: 0.2s">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>微信远程操控安全吗？会不会被别人控制？</span>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>Claw 功能需要你自己扫码绑定微信，只有绑定的微信号才能操控。安全性方面：1) 只有你的微信能发指令；2) AI 的操作都在你授权的文件夹范围内；3) 重要文件建议先备份。但不要在微信里发密码、密钥等敏感信息。</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-reveal" style="transition-delay: 0.25s">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Ask、Craft、Auto 三种模式有什么区别？</span>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>三种模式权限不同：<br><br>
+            • <strong>Ask 模式</strong>：只回答问题，不碰文件，最安全，适合新手入门<br>
+            • <strong>Craft 模式</strong>：可以读取和修改文件，适合文档编辑、表格处理等需要改文件的场景<br>
+            • <strong>Auto 模式</strong>：全自动执行复杂任务，权限最高，适合多步骤工作流，建议熟悉后再用</p>
+          </div>
+        </div>
+        <div class="faq-item scroll-reveal" style="transition-delay: 0.3s">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>非程序员能用 WorkBuddy 吗？</span>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">
+            <p>完全可以！WorkBuddy 就是面向普通办公人群设计的，零代码、下载即用。它的定位是"AI 办公工具"，不是编程工具。文档处理、表格分析、PPT 制作、资料整理这些办公场景才是它的主场。非程序员反而更能体会到它的价值。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content scroll-reveal">
+        <h2>准备好开启你的 <span class="text-gradient-amber">AI 协作之旅</span> 了吗？</h2>
+        <p>现在就去下载 WorkBuddy，领取 5000 新用户积分，让 AI 成为你的效率倍增器。</p>
+        <div class="hero-buttons">
+          <a href="https://www.codebuddy.cn/work/" target="_blank" class="btn-primary">
+            <span>🚀</span>
+            <span>立即下载体验</span>
+          </a>
+          <a href="#about" class="btn-secondary">
+            <span>📖</span>
+            <span>回到顶部再看看</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <div class="logo-icon">🤖</div>
+          <span>WorkBuddy 入门指南</span>
+        </div>
+        <div class="footer-text">
+          本教程仅供学习参考 · 官方网站：codebuddy.cn/work
+        </div>
+        <div class="footer-links">
+          <a href="#features">核心功能</a>
+          <a href="#quickstart">快速上手</a>
+          <a href="#scenarios">实战场景</a>
+          <a href="#faq">常见问题</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    scrollRevealElements.forEach(el => revealObserver.observe(el));
+
+    function toggleFaq(element) {
+      const faqItem = element.parentElement;
+      const isActive = faqItem.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      if (!isActive) {
+        faqItem.classList.add('active');
+      }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const offsetTop = target.offsetTop - 80;
+          window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

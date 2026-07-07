@@ -748,6 +748,171 @@
     color: var(--text-primary);
   }
 
+  /* 7天预报 */
+  .forecast-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--glass-shadow);
+  }
+
+  .forecast-day {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .forecast-day:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .forecast-day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .forecast-day-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .forecast-day-interval {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    padding: 4px 10px;
+    background: var(--glass-bg);
+    border-radius: 20px;
+  }
+
+  .forecast-timeline {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .forecast-timeline::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .forecast-timeline::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .forecast-timeline::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 4px;
+  }
+
+  .forecast-hour-card {
+    flex-shrink: 0;
+    width: 72px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 12px 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .forecast-hour-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+
+  .forecast-hour-time {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .forecast-hour-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .forecast-hour-temp {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .forecast-hour-precip {
+    font-size: 11px;
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .forecast-daily-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .forecast-daily-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 16px 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .forecast-daily-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+
+  .forecast-daily-day {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .forecast-daily-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  .forecast-daily-temps {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .forecast-daily-temp-max {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .forecast-daily-temp-min {
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+
+  .forecast-daily-precip {
+    font-size: 11px;
+    color: #60a5fa;
+  }
+
   /* 更新时间 */
   .update-time {
     text-align: center;
@@ -917,8 +1082,13 @@
 
     .hourly-section,
     .precip-section,
-    .sun-section {
+    .sun-section,
+    .forecast-section {
       padding: 20px;
+    }
+
+    .forecast-daily-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
 
     .chart-container {
@@ -1264,6 +1434,46 @@
     <div class="day-length">
       日照时长 <span id="dayLength">--小时--分</span>
     </div>
+  </div>
+
+  <!-- 7天预报 -->
+  <div class="forecast-section">
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+      </svg>
+      未来7天预报
+    </div>
+    
+    <!-- 第1天：2小时间隔 -->
+    <div class="forecast-day" id="forecastDay1">
+      <div class="forecast-day-header">
+        <span class="forecast-day-name">明天</span>
+        <span class="forecast-day-interval">2小时间隔</span>
+      </div>
+      <div class="forecast-timeline" id="forecastTimeline1"></div>
+    </div>
+
+    <!-- 第2天：3小时间隔 -->
+    <div class="forecast-day" id="forecastDay2">
+      <div class="forecast-day-header">
+        <span class="forecast-day-name" id="forecastDayName2">后天</span>
+        <span class="forecast-day-interval">3小时间隔</span>
+      </div>
+      <div class="forecast-timeline" id="forecastTimeline2"></div>
+    </div>
+
+    <!-- 第3天：6小时间隔 -->
+    <div class="forecast-day" id="forecastDay3">
+      <div class="forecast-day-header">
+        <span class="forecast-day-name" id="forecastDayName3">大后天</span>
+        <span class="forecast-day-interval">6小时间隔</span>
+      </div>
+      <div class="forecast-timeline" id="forecastTimeline3"></div>
+    </div>
+
+    <!-- 第4-7天：每日卡片 -->
+    <div class="forecast-daily-grid" id="forecastDailyGrid"></div>
   </div>
 
   <!-- 更新时间 -->
@@ -1813,7 +2023,7 @@
     errorMsg.classList.remove('visible');
 
     try {
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,dew_point_2m&hourly=visibility,uv_index,weather_code&daily=sunrise,sunset&minutely_15=temperature_2m,precipitation,precipitation_probability,weather_code,wind_speed_10m&timezone=auto`;
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,dew_point_2m&hourly=temperature_2m,precipitation_probability,weather_code,visibility,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset&minutely_15=temperature_2m,precipitation,precipitation_probability,weather_code,wind_speed_10m&forecast_days=7&timezone=auto`;
 
       const airQualityUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}&current=us_aqi,pm2_5,pm10&timezone=auto`;
 
@@ -1936,6 +2146,170 @@
       drawPrecipTimeline(hourlyForChart);
       updatePrecipSummary(hourlyForChart);
     }
+
+    generate7DayForecast(hourly, daily);
+  }
+
+  // 天气emoji映射
+  const weatherEmojis = {
+    'sunny': '☀️',
+    'moon': '🌙',
+    'partly-cloudy': '⛅',
+    'moon-cloudy': '☁️',
+    'cloudy': '☁️',
+    'fog': '🌫️',
+    'drizzle': '🌦️',
+    'rain': '🌧️',
+    'snow': '❄️',
+    'thunder': '⛈️'
+  };
+
+  function getWeatherEmoji(code, isNight) {
+    const info = weatherCodes[code] || { desc: '未知', icon: 'sunny' };
+    let icon = info.icon;
+    if (isNight && icon === 'sunny') icon = 'moon';
+    if (isNight && icon === 'partly-cloudy') icon = 'moon-cloudy';
+    return weatherEmojis[icon] || '🌤️';
+  }
+
+  // 生成7天预报
+  function generate7DayForecast(hourly, daily) {
+    if (!hourly || !hourly.time || hourly.time.length === 0) return;
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    function getDayStart(dayOffset) {
+      const d = new Date(today);
+      d.setDate(d.getDate() + dayOffset);
+      return d;
+    }
+
+    function getDayIndices(dayOffset) {
+      const dayStart = getDayStart(dayOffset);
+      const dayEnd = new Date(dayStart);
+      dayEnd.setDate(dayEnd.getDate() + 1);
+      const startIdx = hourly.time.findIndex(t => new Date(t) >= dayStart);
+      const endIdx = hourly.time.findIndex(t => new Date(t) >= dayEnd);
+      return { start: startIdx >= 0 ? startIdx : 0, end: endIdx >= 0 ? endIdx : hourly.time.length };
+    }
+
+    function formatHour(dateStr) {
+      const d = new Date(dateStr);
+      return d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // 第1天（明天）：2小时间隔
+    const day1 = getDayIndices(1);
+    const day1Container = document.getElementById('forecastTimeline1');
+    day1Container.innerHTML = '';
+    for (let i = day1.start; i < day1.end; i += 2) {
+      if (i >= hourly.time.length) break;
+      const code = hourly.weather_code[i];
+      const temp = Math.round(hourly.temperature_2m[i]);
+      const precip = hourly.precipitation_probability[i] || 0;
+      const hour = new Date(hourly.time[i]);
+      const isNight = hour.getHours() < 6 || hour.getHours() >= 19;
+
+      const card = document.createElement('div');
+      card.className = 'forecast-hour-card';
+      card.innerHTML = `
+        <div class="forecast-hour-time">${formatHour(hourly.time[i])}</div>
+        <div class="forecast-hour-icon">${getWeatherEmoji(code, isNight)}</div>
+        <div class="forecast-hour-temp">${temp}°</div>
+        <div class="forecast-hour-precip">💧${precip}%</div>
+      `;
+      day1Container.appendChild(card);
+    }
+
+    // 第2天：3小时间隔
+    const day2 = getDayIndices(2);
+    document.getElementById('forecastDayName2').textContent = getDayName(2);
+    const day2Container = document.getElementById('forecastTimeline2');
+    day2Container.innerHTML = '';
+    for (let i = day2.start; i < day2.end; i += 3) {
+      if (i >= hourly.time.length) break;
+      const code = hourly.weather_code[i];
+      const temp = Math.round(hourly.temperature_2m[i]);
+      const precip = hourly.precipitation_probability[i] || 0;
+      const hour = new Date(hourly.time[i]);
+      const isNight = hour.getHours() < 6 || hour.getHours() >= 19;
+
+      const card = document.createElement('div');
+      card.className = 'forecast-hour-card';
+      card.innerHTML = `
+        <div class="forecast-hour-time">${formatHour(hourly.time[i])}</div>
+        <div class="forecast-hour-icon">${getWeatherEmoji(code, isNight)}</div>
+        <div class="forecast-hour-temp">${temp}°</div>
+        <div class="forecast-hour-precip">💧${precip}%</div>
+      `;
+      day2Container.appendChild(card);
+    }
+
+    // 第3天：6小时间隔
+    const day3 = getDayIndices(3);
+    document.getElementById('forecastDayName3').textContent = getDayName(3);
+    const day3Container = document.getElementById('forecastTimeline3');
+    day3Container.innerHTML = '';
+    for (let i = day3.start; i < day3.end; i += 6) {
+      if (i >= hourly.time.length) break;
+      const code = hourly.weather_code[i];
+      const temp = Math.round(hourly.temperature_2m[i]);
+      const precip = hourly.precipitation_probability[i] || 0;
+      const hour = new Date(hourly.time[i]);
+      const isNight = hour.getHours() < 6 || hour.getHours() >= 19;
+
+      const card = document.createElement('div');
+      card.className = 'forecast-hour-card';
+      card.innerHTML = `
+        <div class="forecast-hour-time">${formatHour(hourly.time[i])}</div>
+        <div class="forecast-hour-icon">${getWeatherEmoji(code, isNight)}</div>
+        <div class="forecast-hour-temp">${temp}°</div>
+        <div class="forecast-hour-precip">💧${precip}%</div>
+      `;
+      day3Container.appendChild(card);
+    }
+
+    // 第4-7天：每日卡片
+    const dailyGrid = document.getElementById('forecastDailyGrid');
+    dailyGrid.innerHTML = '';
+    if (daily && daily.time && daily.time.length > 4) {
+      for (let i = 4; i < Math.min(7, daily.time.length); i++) {
+        const date = new Date(daily.time[i]);
+        const dayName = getDayName(i);
+        const code = daily.weather_code[i];
+        const tempMax = Math.round(daily.temperature_2m_max[i]);
+        const tempMin = Math.round(daily.temperature_2m_min[i]);
+        const precip = daily.precipitation_probability_max[i] || 0;
+
+        const card = document.createElement('div');
+        card.className = 'forecast-daily-card';
+        card.innerHTML = `
+          <div class="forecast-daily-day">${dayName}</div>
+          <div class="forecast-daily-icon">${getWeatherEmoji(code, false)}</div>
+          <div class="forecast-daily-temps">
+            <span class="forecast-daily-temp-max">${tempMax}°</span>
+            <span class="forecast-daily-temp-min">${tempMin}°</span>
+          </div>
+          <div class="forecast-daily-precip">💧 ${precip}%</div>
+        `;
+        dailyGrid.appendChild(card);
+      }
+    }
+  }
+
+  function getDayName(offset) {
+    const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    const today = new Date();
+    const target = new Date(today);
+    target.setDate(today.getDate() + offset);
+    const dayOfWeek = days[target.getDay()];
+    
+    if (offset === 0) return '今天';
+    if (offset === 1) return '明天';
+    if (offset === 2) return '后天';
+    if (offset === 3) return '大后天';
+    return dayOfWeek;
   }
 
   // 更新降水摘要

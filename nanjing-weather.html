@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>果果家的天气预报</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-gradient-1: #0f172a;
+    --bg-gradient-2: #1e293b;
+    --bg-gradient-3: #334155;
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-tertiary: rgba(255, 255, 255, 0.5);
+    --accent-temp: #38bdf8;
+    --accent-precip: #60a5fa;
+    --accent-good: #4ade80;
+    --accent-warn: #fbbf24;
+    --accent-danger: #f87171;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 50%, var(--bg-gradient-3) 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    overflow-x: hidden;
+    transition: background 1.5s ease;
+  }
+
+  body.weather-clear {
+    --bg-gradient-1: #f97316;
+    --bg-gradient-2: #fb923c;
+    --bg-gradient-3: #fbbf24;
+  }
+
+  body.weather-cloudy {
+    --bg-gradient-1: #475569;
+    --bg-gradient-2: #64748b;
+    --bg-gradient-3: #94a3b8;
+  }
+
+  body.weather-rain {
+    --bg-gradient-1: #1e3a5f;
+    --bg-gradient-2: #2563eb;
+    --bg-gradient-3: #3b82f6;
+  }
+
+  body.weather-night {
+    --bg-gradient-1: #0f0b24;
+    --bg-gradient-2: #1e1b4b;
+    --bg-gradient-3: #312e81;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* 顶部导航 */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nav-location {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .nav-location-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+
+  .nav-location-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .nav-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .nav-date {
+    font-size: 14px;
+    color: var(--text-tertiary);
+  }
+
+  .refresh-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .refresh-btn:active {
+    transform: translateY(0);
+  }
+
+  .refresh-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .refresh-btn.spinning svg {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* 当前天气主卡片 */
+  .current-weather {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 48px;
+    margin-bottom: 24px;
+    box-shadow: var(--glass-shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .current-weather::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+
+  .weather-icon-large {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .weather-icon-large svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 20px rgba(0,0,0,0.3));
+  }
+
+  .current-temp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 96px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .current-temp .unit {
+    font-size: 36px;
+    font-weight: 400;
+    vertical-align: super;
+    opacity: 0.7;
+  }
+
+  .weather-desc {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 1;
+  }
+
+  .feels-like {
+    font-size: 16px;
+    color: var(--text-tertiary);
+    position: relative;
+    z-index: 1;
+  }
+
+  .feels-like span {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* 快捷指标栏 */
+  .quick-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .stat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 14px;
+  }
+
+  .stat-header svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .stat-value .unit {
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.6;
+    margin-left: 2px;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  /* 1小时预报 */
+  .hourly-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--glass-shadow);
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 220px;
+    margin-bottom: 8px;
+  }
+
+  .chart-container svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .chart-tooltip {
+    position: absolute;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+    min-width: 120px;
+  }
+
+  .chart-tooltip.visible {
+    opacity: 1;
+  }
+
+  .tooltip-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+  }
+
+  .tooltip-temp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-temp);
+    margin-bottom: 4px;
+  }
+
+  .tooltip-precip {
+    font-size: 12px;
+    color: var(--accent-precip);
+  }
+
+  .time-labels {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* 降水英雄区（首位） */
+  .precip-hero-section {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 197, 253, 0.1));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    border-radius: 28px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+  }
+
+  .precip-title {
+    color: #93c5fd;
+  }
+
+  .precip-hero-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .precip-hero-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .precip-hero-label {
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+
+  .precip-hero-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: #60a5fa;
+  }
+
+  .precip-timeline-large {
+    height: 80px !important;
+  }
+
+  /* 降水时间轴 */
+  .precip-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--glass-shadow);
+  }
+
+  .precip-timeline {
+    position: relative;
+    height: 60px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .precip-segment {
+    flex: 1;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .precip-segment:first-child {
+    border-radius: 12px 0 0 12px;
+  }
+
+  .precip-segment:last-child {
+    border-radius: 0 12px 12px 0;
+  }
+
+  .precip-segment:hover {
+    filter: brightness(1.2);
+  }
+
+  .precip-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .precip-legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  .legend-gradient {
+    width: 100px;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(to right, 
+      rgba(96, 165, 250, 0.1) 0%, 
+      rgba(59, 130, 246, 0.4) 50%, 
+      rgba(37, 99, 235, 0.8) 100%
+    );
+  }
+
+  /* 详细指标网格 */
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .detail-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .detail-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .detail-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .detail-label svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .detail-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .badge-good {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+  }
+
+  .badge-moderate {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+  }
+
+  .badge-poor {
+    background: rgba(248, 113, 113, 0.2);
+    color: #f87171;
+  }
+
+  .detail-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+  }
+
+  .detail-value .unit {
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.5;
+    margin-left: 4px;
+  }
+
+  .detail-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .detail-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+
+  .detail-sub-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  /* 日出日落 */
+  .sun-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--glass-shadow);
+  }
+
+  .sun-arc-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .sun-arc {
+    width: 100%;
+    max-width: 400px;
+    height: 120px;
+    position: relative;
+  }
+
+  .sun-arc svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sun-times {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+
+  .sun-time-item {
+    text-align: center;
+  }
+
+  .sun-time-label {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+  }
+
+  .sun-time-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .day-length {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--glass-border);
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .day-length span {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* 更新时间 */
+  .update-time {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    padding: 16px 0;
+  }
+
+  .update-time svg {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+
+  /* 加载状态 */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-gradient-1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 0.5s ease;
+  }
+
+  .loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--glass-border);
+    border-top-color: var(--accent-temp);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  .loading-text {
+    font-size: 16px;
+    color: var(--text-secondary);
+  }
+
+  /* 错误状态 */
+  .error-message {
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    color: #f87171;
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .error-message.visible {
+    display: flex;
+  }
+
+  .error-message svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .container {
+      padding: 12px;
+    }
+
+    .navbar {
+      padding: 12px 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .nav-location {
+      font-size: 16px;
+    }
+
+    .nav-time {
+      font-size: 14px;
+    }
+
+    .current-weather {
+      padding: 32px 20px;
+    }
+
+    .weather-icon-large {
+      width: 80px;
+      height: 80px;
+    }
+
+    .current-temp {
+      font-size: 64px;
+    }
+
+    .current-temp .unit {
+      font-size: 24px;
+    }
+
+    .weather-desc {
+      font-size: 18px;
+    }
+
+    .precip-hero-section {
+      padding: 20px;
+    }
+
+    .precip-hero-summary {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .precip-hero-value {
+      font-size: 22px;
+    }
+
+    .precip-timeline-large {
+      height: 60px !important;
+    }
+
+    .quick-stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat-card {
+      padding: 14px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+    }
+
+    .hourly-section,
+    .precip-section,
+    .sun-section {
+      padding: 20px;
+    }
+
+    .chart-container {
+      height: 180px;
+    }
+
+    .details-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .detail-card {
+      padding: 18px;
+    }
+
+    .detail-value {
+      font-size: 28px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nav-date {
+      display: none;
+    }
+
+    .current-temp {
+      font-size: 56px;
+    }
+  }
+</style>
+</head>
+<body class="weather-night">
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">正在加载天气数据...</div>
+</div>
+
+<div class="container">
+  <!-- 顶部导航 -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <svg class="nav-location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+      <div>
+        <div class="nav-location" id="locationName">果果家</div>
+        <div class="nav-location-sub" id="locationSub">江悦光年</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div>
+        <div class="nav-time" id="currentTime">--:--:--</div>
+        <div class="nav-date" id="currentDate">----年--月--日</div>
+      </div>
+      <button class="refresh-btn" id="refreshBtn" onclick="fetchWeatherData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <polyline points="1 20 1 14 7 14"></polyline>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        刷新
+      </button>
+    </div>
+  </nav>
+
+  <!-- 错误提示 -->
+  <div class="error-message" id="errorMessage">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <span id="errorText">加载天气数据失败，请稍后重试</span>
+  </div>
+
+  <!-- 当前天气 -->
+  <div class="current-weather">
+    <div class="weather-icon-large" id="weatherIcon">
+      <svg viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="20" fill="#fbbf24" opacity="0.9"/>
+      </svg>
+    </div>
+    <div class="current-temp">
+      <span id="currentTemp">--</span><span class="unit">°C</span>
+    </div>
+    <div class="weather-desc" id="weatherDesc">加载中...</div>
+    <div class="feels-like">
+      体感温度 <span id="feelsLike">--</span>°C
+    </div>
+  </div>
+
+  <!-- 降水预报（首位） -->
+  <div class="precip-hero-section">
+    <div class="section-title precip-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="2" x2="12" y2="22"></line>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>
+      未来1小时降水预报
+    </div>
+    <div class="precip-hero-summary" id="precipSummary">
+      <div class="precip-hero-main">
+        <span class="precip-hero-label">降水概率</span>
+        <span class="precip-hero-value" id="precipProbMax">--%</span>
+      </div>
+      <div class="precip-hero-main">
+        <span class="precip-hero-label">最大降水量</span>
+        <span class="precip-hero-value" id="precipAmountMax">-- mm</span>
+      </div>
+      <div class="precip-hero-main">
+        <span class="precip-hero-label">降水时段</span>
+        <span class="precip-hero-value" id="precipPeriod">--</span>
+      </div>
+    </div>
+    <div class="precip-timeline precip-timeline-large" id="precipTimeline"></div>
+    <div class="precip-labels" id="precipLabels"></div>
+    <div class="precip-legend">
+      <span>无降水</span>
+      <div class="legend-gradient"></div>
+      <span>强降水</span>
+    </div>
+  </div>
+
+  <!-- 1小时趋势图 -->
+  <div class="hourly-section">
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6" y1="20" x2="6" y2="14"></line>
+      </svg>
+      温度与风速趋势
+    </div>
+    <div class="chart-container" id="chartContainer">
+      <svg id="hourlyChart" viewBox="0 0 600 220" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="tempGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:#38bdf8;stop-opacity:0" />
+          </linearGradient>
+          <linearGradient id="precipGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.2" />
+          </linearGradient>
+        </defs>
+        <g id="gridLines" opacity="0.1"></g>
+        <g id="precipBars"></g>
+        <path id="tempArea" d="" fill="url(#tempGradient)"/>
+        <path id="tempLine" d="" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="tempDots"></g>
+        <line id="hoverLine" x1="0" y1="0" x2="0" y2="220" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="4,4" style="display:none"/>
+      </svg>
+      <div class="chart-tooltip" id="chartTooltip">
+        <div class="tooltip-time" id="tooltipTime">--:--</div>
+        <div class="tooltip-temp" id="tooltipTemp">--°C</div>
+        <div class="tooltip-precip" id="tooltipPrecip">降水概率 --%</div>
+      </div>
+    </div>
+    <div class="time-labels" id="timeLabels"></div>
+  </div>
+
+  <!-- 快捷指标 -->
+  <div class="quick-stats">
+    <div class="stat-card">
+      <div class="stat-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+        </svg>
+        湿度
+      </div>
+      <div class="stat-value"><span id="humidity">--</span><span class="unit">%</span></div>
+      <div class="stat-sub">相对湿度</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path>
+        </svg>
+        风速
+      </div>
+      <div class="stat-value"><span id="windSpeed">--</span><span class="unit">km/h</span></div>
+      <div class="stat-sub" id="windDirection">--</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        气压
+      </div>
+      <div class="stat-value"><span id="pressure">--</span><span class="unit">hPa</span></div>
+      <div class="stat-sub">大气压强</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        能见度
+      </div>
+      <div class="stat-value"><span id="visibility">--</span><span class="unit">km</span></div>
+      <div class="stat-sub">水平能见度</div>
+    </div>
+  </div>
+
+  <!-- 详细指标 -->
+  <div class="details-grid">
+    <div class="detail-card">
+      <div class="detail-header">
+        <div class="detail-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+          </svg>
+          空气质量
+        </div>
+        <div class="detail-badge badge-good" id="aqiBadge">优</div>
+      </div>
+      <div class="detail-value"><span id="aqiValue">--</span><span class="unit">AQI</span></div>
+      <div class="detail-bar">
+        <div class="detail-bar-fill" id="aqiBar" style="background: linear-gradient(to right, #4ade80, #22c55e); width: 0%;"></div>
+      </div>
+      <div class="detail-sub-info">
+        <span>PM2.5: <span id="pm25Value">--</span></span>
+        <span>PM10: <span id="pm10Value">--</span></span>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-header">
+        <div class="detail-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+          紫外线指数
+        </div>
+        <div class="detail-badge badge-moderate" id="uvBadge">中等</div>
+      </div>
+      <div class="detail-value"><span id="uvValue">--</span><span class="unit">UV</span></div>
+      <div class="detail-bar">
+        <div class="detail-bar-fill" id="uvBar" style="background: linear-gradient(to right, #4ade80, #fbbf24, #f87171); width: 0%;"></div>
+      </div>
+      <div class="detail-sub-info">
+        <span>最低: 0</span>
+        <span>最高: 11+</span>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-header">
+        <div class="detail-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12h20"></path>
+            <path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"></path>
+            <path d="M3 9l1-6h16l1 6"></path>
+          </svg>
+          露点温度
+        </div>
+        <div class="detail-badge badge-good">正常</div>
+      </div>
+      <div class="detail-value"><span id="dewPoint">--</span><span class="unit">°C</span></div>
+      <div class="detail-sub-info" style="margin-top: 8px;">
+        <span>空气中水汽达到饱和时的温度</span>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-header">
+        <div class="detail-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          云量
+        </div>
+        <div class="detail-badge badge-moderate" id="cloudBadge">--</div>
+      </div>
+      <div class="detail-value"><span id="cloudCover">--</span><span class="unit">%</span></div>
+      <div class="detail-bar">
+        <div class="detail-bar-fill" id="cloudBar" style="background: linear-gradient(to right, #94a3b8, #64748b); width: 0%;"></div>
+      </div>
+      <div class="detail-sub-info">
+        <span>晴空</span>
+        <span>阴天</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 日出日落 -->
+  <div class="sun-section">
+    <div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+      </svg>
+      日出日落
+    </div>
+    <div class="sun-arc-container">
+      <div class="sun-arc">
+        <svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="sunArcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#f97316;stop-opacity:0.3" />
+              <stop offset="50%" style="stop-color:#fbbf24;stop-opacity:0.8" />
+              <stop offset="100%" style="stop-color:#f97316;stop-opacity:0.3" />
+            </linearGradient>
+          </defs>
+          <path d="M 20 110 Q 200 -20 380 110" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2" stroke-dasharray="4,4"/>
+          <path id="sunArcDay" d="" fill="none" stroke="url(#sunArcGradient)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="20" cy="110" r="6" fill="#f97316" opacity="0.8"/>
+          <circle cx="380" cy="110" r="6" fill="#f97316" opacity="0.8"/>
+          <circle id="sunPosition" cx="20" cy="110" r="10" fill="#fbbf24">
+            <animate attributeName="r" values="10;12;10" dur="3s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+    </div>
+    <div class="sun-times">
+      <div class="sun-time-item">
+        <div class="sun-time-label">日出</div>
+        <div class="sun-time-value" id="sunriseTime">--:--</div>
+      </div>
+      <div class="sun-time-item">
+        <div class="sun-time-label">日落</div>
+        <div class="sun-time-value" id="sunsetTime">--:--</div>
+      </div>
+    </div>
+    <div class="day-length">
+      日照时长 <span id="dayLength">--小时--分</span>
+    </div>
+  </div>
+
+  <!-- 更新时间 -->
+  <div class="update-time">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+    最后更新: <span id="lastUpdate">--</span>
+  </div>
+</div>
+
+<script>
+  // 江悦光年小区坐标（南京江北新区，新浦路与临滁路交叉口）
+  const LOCATION_LAT = 32.080;
+  const LOCATION_LON = 118.715;
+  const LOCATION_NAME = '果果家';
+  const LOCATION_SUB = '江悦光年';
+
+  // 天气代码映射
+  const weatherCodes = {
+    0: { desc: '晴', icon: 'sunny' },
+    1: { desc: '大部晴朗', icon: 'sunny' },
+    2: { desc: '多云', icon: 'partly-cloudy' },
+    3: { desc: '阴', icon: 'cloudy' },
+    45: { desc: '雾', icon: 'fog' },
+    48: { desc: '冻雾', icon: 'fog' },
+    51: { desc: '小毛毛雨', icon: 'drizzle' },
+    53: { desc: '中毛毛雨', icon: 'drizzle' },
+    55: { desc: '大毛毛雨', icon: 'drizzle' },
+    61: { desc: '小雨', icon: 'rain' },
+    63: { desc: '中雨', icon: 'rain' },
+    65: { desc: '大雨', icon: 'rain' },
+    71: { desc: '小雪', icon: 'snow' },
+    73: { desc: '中雪', icon: 'snow' },
+    75: { desc: '大雪', icon: 'snow' },
+    80: { desc: '阵雨', icon: 'rain' },
+    81: { desc: '中阵雨', icon: 'rain' },
+    82: { desc: '大阵雨', icon: 'rain' },
+    95: { desc: '雷暴', icon: 'thunder' },
+    96: { desc: '雷暴伴小冰雹', icon: 'thunder' },
+    99: { desc: '雷暴伴大冰雹', icon: 'thunder' }
+  };
+
+  // 风向描述
+  function getWindDirection(deg) {
+    const directions = ['北风', '东北风', '东风', '东南风', '南风', '西南风', '西风', '西北风'];
+    const index = Math.round(deg / 45) % 8;
+    return directions[index];
+  }
+
+  // AQI等级
+  function getAQILevel(aqi) {
+    if (aqi <= 50) return { label: '优', class: 'badge-good', percent: (aqi / 50) * 25 };
+    if (aqi <= 100) return { label: '良', class: 'badge-good', percent: 25 + ((aqi - 50) / 50) * 25 };
+    if (aqi <= 150) return { label: '轻度污染', class: 'badge-moderate', percent: 50 + ((aqi - 100) / 50) * 25 };
+    if (aqi <= 200) return { label: '中度污染', class: 'badge-moderate', percent: 75 + ((aqi - 150) / 50) * 25 };
+    return { label: '重度污染', class: 'badge-poor', percent: 100 };
+  }
+
+  // UV等级
+  function getUVLevel(uv) {
+    if (uv <= 2) return { label: '低', class: 'badge-good' };
+    if (uv <= 5) return { label: '中等', class: 'badge-moderate' };
+    if (uv <= 7) return { label: '高', class: 'badge-moderate' };
+    if (uv <= 10) return { label: '很高', class: 'badge-poor' };
+    return { label: '极高', class: 'badge-poor' };
+  }
+
+  // 生成天气图标SVG
+  function getWeatherIconSVG(type) {
+    const icons = {
+      'sunny': `<svg viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="22" fill="#fbbf24">
+          <animate attributeName="r" values="22;24;22" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <g stroke="#fbbf24" stroke-width="3" stroke-linecap="round" opacity="0.8">
+          <line x1="50" y1="12" x2="50" y2="22"/>
+          <line x1="50" y1="78" x2="50" y2="88"/>
+          <line x1="12" y1="50" x2="22" y2="50"/>
+          <line x1="78" y1="50" x2="88" y2="50"/>
+          <line x1="23" y1="23" x2="30" y2="30"/>
+          <line x1="70" y1="70" x2="77" y2="77"/>
+          <line x1="23" y1="77" x2="30" y2="70"/>
+          <line x1="70" y1="30" x2="77" y2="23"/>
+        </g>
+      </svg>`,
+      'partly-cloudy': `<svg viewBox="0 0 100 100" fill="none">
+        <circle cx="38" cy="38" r="18" fill="#fbbf24">
+          <animate attributeName="r" values="18;20;18" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <g stroke="#fbbf24" stroke-width="2" stroke-linecap="round" opacity="0.6">
+          <line x1="38" y1="12" x2="38" y2="18"/>
+          <line x1="12" y1="38" x2="18" y2="38"/>
+          <line x1="20" y1="20" x2="25" y2="25"/>
+        </g>
+        <g fill="#e2e8f0">
+          <ellipse cx="58" cy="58" rx="28" ry="14"/>
+          <circle cx="48" cy="54" r="12"/>
+          <circle cx="68" cy="52" r="14"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0; 2 0; 0 0" dur="6s" repeatCount="indefinite"/>
+        </g>
+      </svg>`,
+      'cloudy': `<svg viewBox="0 0 100 100" fill="none">
+        <g fill="#94a3b8">
+          <ellipse cx="50" cy="55" rx="32" ry="16"/>
+          <circle cx="35" cy="50" r="14"/>
+          <circle cx="60" cy="48" r="16"/>
+          <circle cx="72" cy="54" r="12"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0; 3 0; 0 0" dur="8s" repeatCount="indefinite"/>
+        </g>
+      </svg>`,
+      'rain': `<svg viewBox="0 0 100 100" fill="none">
+        <g fill="#64748b">
+          <ellipse cx="50" cy="40" rx="30" ry="15"/>
+          <circle cx="35" cy="36" r="13"/>
+          <circle cx="60" cy="34" r="15"/>
+          <circle cx="70" cy="40" r="11"/>
+        </g>
+        <g stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" opacity="0.8">
+          <line x1="35" y1="60" x2="32" y2="72">
+            <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite"/>
+          </line>
+          <line x1="50" y1="60" x2="47" y2="75">
+            <animate attributeName="opacity" values="0.6;0.9;0.6" dur="1.2s" repeatCount="indefinite"/>
+          </line>
+          <line x1="65" y1="60" x2="62" y2="72">
+            <animate attributeName="opacity" values="0.9;0.4;0.9" dur="0.9s" repeatCount="indefinite"/>
+          </line>
+          <line x1="42" y1="70" x2="39" y2="82">
+            <animate attributeName="opacity" values="0.5;0.8;0.5" dur="1.1s" repeatCount="indefinite"/>
+          </line>
+          <line x1="58" y1="70" x2="55" y2="80">
+            <animate attributeName="opacity" values="0.7;0.3;0.7" dur="1.3s" repeatCount="indefinite"/>
+          </line>
+        </g>
+      </svg>`,
+      'drizzle': `<svg viewBox="0 0 100 100" fill="none">
+        <g fill="#94a3b8">
+          <ellipse cx="50" cy="42" rx="28" ry="14"/>
+          <circle cx="36" cy="38" r="12"/>
+          <circle cx="60" cy="36" r="14"/>
+        </g>
+        <g fill="#93c5fd" opacity="0.7">
+          <circle cx="38" cy="65" r="2">
+            <animate attributeName="cy" values="62;72;62" dur="1.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="50" cy="65" r="2">
+            <animate attributeName="cy" values="62;72;62" dur="1.8s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0.1;0.6" dur="1.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="62" cy="65" r="2">
+            <animate attributeName="cy" values="62;72;62" dur="1.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1.6s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+      </svg>`,
+      'snow': `<svg viewBox="0 0 100 100" fill="none">
+        <g fill="#94a3b8">
+          <ellipse cx="50" cy="38" rx="28" ry="14"/>
+          <circle cx="36" cy="34" r="12"/>
+          <circle cx="60" cy="32" r="14"/>
+        </g>
+        <g fill="#f1f5f9">
+          <circle cx="35" cy="65" r="3">
+            <animate attributeName="cy" values="62;78;62" dur="3s" repeatCount="indefinite"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 35 70" to="360 35 70" dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="50" cy="68" r="3">
+            <animate attributeName="cy" values="65;80;65" dur="3.5s" repeatCount="indefinite"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 50 72" to="-360 50 72" dur="5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="65" cy="62" r="3">
+            <animate attributeName="cy" values="60;76;60" dur="2.8s" repeatCount="indefinite"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 65 68" to="360 65 68" dur="4.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="42" cy="78" r="2.5">
+            <animate attributeName="cy" values="75;88;75" dur="3.2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="58" cy="76" r="2.5">
+            <animate attributeName="cy" values="73;86;73" dur="2.9s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+      </svg>`,
+      'thunder': `<svg viewBox="0 0 100 100" fill="none">
+        <g fill="#475569">
+          <ellipse cx="50" cy="38" rx="30" ry="15"/>
+          <circle cx="35" cy="34" r="13"/>
+          <circle cx="60" cy="32" r="15"/>
+          <circle cx="72" cy="38" r="11"/>
+        </g>
+        <polygon points="52,52 42,68 50,68 46,88 62,66 54,66 58,52" fill="#fbbf24">
+          <animate attributeName="opacity" values="1;0.3;1" dur="0.5s" repeatCount="indefinite"/>
+        </polygon>
+      </svg>`,
+      'moon': `<svg viewBox="0 0 100 100" fill="none">
+        <path d="M 55 20 A 30 30 0 1 0 75 60 A 25 25 0 0 1 55 20 Z" fill="#fef3c7">
+          <animate attributeName="opacity" values="1;0.9;1" dur="5s" repeatCount="indefinite"/>
+        </path>
+        <circle cx="58" cy="38" r="3" fill="#fde68a" opacity="0.6"/>
+        <circle cx="68" cy="52" r="2" fill="#fde68a" opacity="0.5"/>
+        <g fill="#ffffff" opacity="0.8">
+          <circle cx="20" cy="25" r="1.5">
+            <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="80" cy="20" r="1">
+            <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="25" cy="70" r="1.2">
+            <animate attributeName="opacity" values="0.7;0.2;0.7" dur="3.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="85" cy="75" r="1">
+            <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="15" cy="50" r="0.8">
+            <animate attributeName="opacity" values="0.6;0.2;0.6" dur="4s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+      </svg>`,
+      'moon-cloudy': `<svg viewBox="0 0 100 100" fill="none">
+        <path d="M 42 22 A 22 22 0 1 0 58 50 A 18 18 0 0 1 42 22 Z" fill="#fef3c7" opacity="0.9"/>
+        <g fill="#94a3b8">
+          <ellipse cx="55" cy="65" rx="30" ry="15"/>
+          <circle cx="40" cy="60" r="13"/>
+          <circle cx="65" cy="58" r="15"/>
+          <circle cx="78" cy="64" r="11"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0; 2 0; 0 0" dur="8s" repeatCount="indefinite"/>
+        </g>
+        <g fill="#ffffff" opacity="0.6">
+          <circle cx="18" cy="28" r="1"/>
+          <circle cx="85" cy="30" r="0.8"/>
+        </g>
+      </svg>`,
+      'fog': `<svg viewBox="0 0 100 100" fill="none">
+        <g stroke="#94a3b8" stroke-width="4" stroke-linecap="round">
+          <line x1="20" y1="35" x2="80" y2="35" opacity="0.5">
+            <animate attributeName="opacity" values="0.5;0.8;0.5" dur="4s" repeatCount="indefinite"/>
+          </line>
+          <line x1="15" y1="50" x2="85" y2="50" opacity="0.6">
+            <animate attributeName="opacity" values="0.6;0.3;0.6" dur="5s" repeatCount="indefinite"/>
+          </line>
+          <line x1="25" y1="65" x2="75" y2="65" opacity="0.5">
+            <animate attributeName="opacity" values="0.4;0.7;0.4" dur="3.5s" repeatCount="indefinite"/>
+          </line>
+          <line x1="18" y1="80" x2="82" y2="80" opacity="0.4">
+            <animate attributeName="opacity" values="0.3;0.6;0.3" dur="4.5s" repeatCount="indefinite"/>
+          </line>
+        </g>
+      </svg>`
+    };
+    return icons[type] || icons['sunny'];
+  }
+
+  // 更新主题
+  function updateTheme(weatherCode, isNight) {
+    document.body.classList.remove('weather-clear', 'weather-cloudy', 'weather-rain', 'weather-night');
+    
+    if (isNight) {
+      document.body.classList.add('weather-night');
+    } else if ([0, 1].includes(weatherCode)) {
+      document.body.classList.add('weather-clear');
+    } else if ([2, 3, 45, 48].includes(weatherCode)) {
+      document.body.classList.add('weather-cloudy');
+    } else if (weatherCode >= 51 && weatherCode <= 67 || weatherCode >= 80 || weatherCode >= 95) {
+      document.body.classList.add('weather-rain');
+    } else {
+      document.body.classList.add('weather-cloudy');
+    }
+  }
+
+  // 判断是否夜晚
+  function isNightTime(sunrise, sunset) {
+    const now = new Date();
+    const sunriseTime = new Date(sunrise);
+    const sunsetTime = new Date(sunset);
+    return now < sunriseTime || now > sunsetTime;
+  }
+
+  // 格式化时间
+  function formatTime(date) {
+    const d = new Date(date);
+    return d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // 更新时钟
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('currentTime').textContent = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+  }
+
+  // 绘制1小时预报图
+  function drawHourlyChart(hourlyData) {
+    const svg = document.getElementById('hourlyChart');
+    const tempLine = document.getElementById('tempLine');
+    const tempArea = document.getElementById('tempArea');
+    const tempDots = document.getElementById('tempDots');
+    const precipBars = document.getElementById('precipBars');
+    const gridLines = document.getElementById('gridLines');
+    const timeLabels = document.getElementById('timeLabels');
+
+    const width = 600;
+    const height = 220;
+    const padding = { top: 20, right: 10, bottom: 30, left: 10 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+
+    const dataPoints = Math.min(7, hourlyData.time.length);
+    const stepX = chartWidth / (dataPoints - 1);
+
+    const temps = hourlyData.temperature.slice(0, dataPoints);
+    const precips = hourlyData.precipitation.slice(0, dataPoints);
+    const precipProbs = hourlyData.precipitationProbability?.slice(0, dataPoints) || [];
+
+    const minTemp = Math.min(...temps) - 2;
+    const maxTemp = Math.max(...temps) + 2;
+    const maxPrecip = Math.max(...precips, 1);
+
+    tempDots.innerHTML = '';
+    precipBars.innerHTML = '';
+    gridLines.innerHTML = '';
+    timeLabels.innerHTML = '';
+
+    const tempRange = maxTemp - minTemp;
+    const points = temps.map((temp, i) => {
+      const x = padding.left + i * stepX;
+      const y = padding.top + chartHeight - ((temp - minTemp) / tempRange) * chartHeight;
+      return { x, y, temp, index: i };
+    });
+
+    const gridCount = 4;
+    for (let i = 0; i <= gridCount; i++) {
+      const y = padding.top + (chartHeight / gridCount) * i;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', padding.left);
+      line.setAttribute('y1', y);
+      line.setAttribute('x2', width - padding.right);
+      line.setAttribute('y2', y);
+      line.setAttribute('stroke', 'rgba(255,255,255,0.1)');
+      line.setAttribute('stroke-width', '1');
+      gridLines.appendChild(line);
+    }
+
+    precips.forEach((precip, i) => {
+      if (precip > 0) {
+        const x = padding.left + i * stepX;
+        const barHeight = (precip / maxPrecip) * (chartHeight * 0.4);
+        const barWidth = stepX * 0.4;
+        const barY = padding.top + chartHeight - barHeight;
+        
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', x - barWidth / 2);
+        rect.setAttribute('y', barY);
+        rect.setAttribute('width', barWidth);
+        rect.setAttribute('height', barHeight);
+        rect.setAttribute('rx', '3');
+        rect.setAttribute('fill', 'rgba(96, 165, 250, 0.4)');
+        precipBars.appendChild(rect);
+      }
+    });
+
+    let linePath = `M ${points[0].x} ${points[0].y}`;
+    let areaPath = `M ${points[0].x} ${padding.top + chartHeight} L ${points[0].x} ${points[0].y}`;
+
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const cpx1 = prev.x + stepX / 3;
+      const cpx2 = curr.x - stepX / 3;
+      linePath += ` C ${cpx1} ${prev.y}, ${cpx2} ${curr.y}, ${curr.x} ${curr.y}`;
+      areaPath += ` C ${cpx1} ${prev.y}, ${cpx2} ${curr.y}, ${curr.x} ${curr.y}`;
+    }
+    areaPath += ` L ${points[points.length - 1].x} ${padding.top + chartHeight} Z`;
+
+    tempLine.setAttribute('d', linePath);
+    tempArea.setAttribute('d', areaPath);
+
+    points.forEach((point, i) => {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', point.x);
+      circle.setAttribute('cy', point.y);
+      circle.setAttribute('r', '4');
+      circle.setAttribute('fill', '#38bdf8');
+      circle.setAttribute('stroke', 'white');
+      circle.setAttribute('stroke-width', '2');
+      circle.style.cursor = 'pointer';
+      circle.dataset.index = i;
+      tempDots.appendChild(circle);
+    });
+
+    for (let i = 0; i < dataPoints; i += Math.ceil(dataPoints / 4)) {
+      const label = document.createElement('span');
+      const timeStr = formatTime(hourlyData.time[i]);
+      label.textContent = timeStr;
+      timeLabels.appendChild(label);
+    }
+
+    const chartContainer = document.getElementById('chartContainer');
+    const hoverLine = document.getElementById('hoverLine');
+    const tooltip = document.getElementById('chartTooltip');
+
+    chartContainer.addEventListener('mousemove', (e) => {
+      const rect = chartContainer.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * width;
+      const closestIndex = Math.round((x - padding.left) / stepX);
+      const clampedIndex = Math.max(0, Math.min(dataPoints - 1, closestIndex));
+      
+      const point = points[clampedIndex];
+      hoverLine.setAttribute('x1', point.x);
+      hoverLine.setAttribute('x2', point.x);
+      hoverLine.style.display = 'block';
+
+      const tooltipX = (point.x / width) * rect.width;
+      const tooltipY = (point.y / height) * rect.height - 60;
+      
+      tooltip.style.left = Math.min(Math.max(tooltipX - 60, 10), rect.width - 140) + 'px';
+      tooltip.style.top = Math.max(tooltipY, 10) + 'px';
+      tooltip.classList.add('visible');
+
+      document.getElementById('tooltipTime').textContent = formatTime(hourlyData.time[clampedIndex]);
+      document.getElementById('tooltipTemp').textContent = temps[clampedIndex] + '°C';
+      const prob = precipProbs[clampedIndex] || 0;
+      document.getElementById('tooltipPrecip').textContent = `降水概率 ${prob}%`;
+    });
+
+    chartContainer.addEventListener('mouseleave', () => {
+      hoverLine.style.display = 'none';
+      tooltip.classList.remove('visible');
+    });
+  }
+
+  // 绘制降水时间轴
+  function drawPrecipTimeline(hourlyData) {
+    const timeline = document.getElementById('precipTimeline');
+    const labels = document.getElementById('precipLabels');
+    timeline.innerHTML = '';
+    labels.innerHTML = '';
+
+    const dataPoints = Math.min(12, hourlyData.time.length);
+    const precips = hourlyData.precipitation.slice(0, dataPoints);
+    const maxPrecip = Math.max(...precips, 0.1);
+
+    precips.forEach((precip, i) => {
+      const segment = document.createElement('div');
+      segment.className = 'precip-segment';
+      const intensity = Math.min(precip / maxPrecip, 1);
+      const blueVal = Math.floor(100 + intensity * 155);
+      const alpha = 0.1 + intensity * 0.7;
+      segment.style.background = `rgba(59, 130, 246, ${alpha})`;
+      segment.title = `${formatTime(hourlyData.time[i])}: ${precip}mm`;
+      timeline.appendChild(segment);
+    });
+
+    for (let i = 0; i < dataPoints; i += Math.ceil(dataPoints / 4)) {
+      const label = document.createElement('span');
+      label.textContent = formatTime(hourlyData.time[i]);
+      labels.appendChild(label);
+    }
+  }
+
+  // 更新太阳位置
+  function updateSunPosition(sunrise, sunset) {
+    const now = new Date();
+    const sunriseTime = new Date(sunrise);
+    const sunsetTime = new Date(sunset);
+
+    const dayLength = sunsetTime - sunriseTime;
+    const elapsed = now - sunriseTime;
+    const progress = Math.max(0, Math.min(1, elapsed / dayLength));
+
+    const startX = 20;
+    const endX = 380;
+    const startY = 110;
+    const endY = 110;
+    const peakY = -20;
+
+    const x = startX + (endX - startX) * progress;
+    const t = progress;
+    const y = startY * (1 - t) * (1 - t) + 2 * peakY * (1 - t) * t + endY * t * t;
+
+    const sunPosition = document.getElementById('sunPosition');
+    sunPosition.setAttribute('cx', x);
+    sunPosition.setAttribute('cy', y);
+
+    const sunArcDay = document.getElementById('sunArcDay');
+    let arcPath = `M ${startX} ${startY}`;
+    const steps = 50;
+    for (let i = 1; i <= steps; i++) {
+      const tp = (i / steps) * progress;
+      const xp = startX + (endX - startX) * tp;
+      const yp = startY * (1 - tp) * (1 - tp) + 2 * peakY * (1 - tp) * tp + endY * tp * tp;
+      arcPath += ` L ${xp} ${yp}`;
+    }
+    sunArcDay.setAttribute('d', arcPath);
+
+    const dayLengthMs = sunsetTime - sunriseTime;
+    const hours = Math.floor(dayLengthMs / (1000 * 60 * 60));
+    const minutes = Math.floor((dayLengthMs % (1000 * 60 * 60)) / (1000 * 60));
+    document.getElementById('dayLength').textContent = `${hours}小时${minutes}分`;
+  }
+
+  // 获取天气数据
+  async function fetchWeatherData() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    const errorMsg = document.getElementById('errorMessage');
+    
+    refreshBtn.classList.add('spinning');
+    errorMsg.classList.remove('visible');
+
+    try {
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,dew_point_2m&hourly=visibility,uv_index,weather_code&daily=sunrise,sunset&minutely_15=temperature_2m,precipitation,precipitation_probability,weather_code,wind_speed_10m&timezone=auto`;
+
+      const airQualityUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}&current=us_aqi,pm2_5,pm10&timezone=auto`;
+
+      const [weatherRes, airQualityRes] = await Promise.all([
+        fetch(weatherUrl),
+        fetch(airQualityUrl)
+      ]);
+
+      if (!weatherRes.ok) throw new Error('天气数据获取失败');
+      
+      const weatherData = await weatherRes.json();
+      let airQualityData = null;
+      if (airQualityRes.ok) {
+        airQualityData = await airQualityRes.json();
+      }
+
+      updateWeatherUI(weatherData, airQualityData);
+      
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      
+    } catch (error) {
+      console.error('获取天气数据失败:', error);
+      document.getElementById('errorText').textContent = '加载天气数据失败: ' + error.message;
+      errorMsg.classList.add('visible');
+      document.getElementById('loadingOverlay').classList.add('hidden');
+    } finally {
+      refreshBtn.classList.remove('spinning');
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('zh-CN');
+    }
+  }
+
+  // 更新UI
+  function updateWeatherUI(weatherData, airQualityData) {
+    const current = weatherData.current;
+    const hourly = weatherData.hourly;
+    const daily = weatherData.daily;
+    const minutely = weatherData.minutely_15 || null;
+
+    const weatherInfo = weatherCodes[current.weather_code] || { desc: '未知', icon: 'sunny' };
+
+    const isNight = isNightTime(daily.sunrise[0], daily.sunset[0]);
+    const iconType = isNight && weatherInfo.icon === 'sunny' ? 'moon' : 
+                     isNight && weatherInfo.icon === 'partly-cloudy' ? 'moon-cloudy' : 
+                     weatherInfo.icon;
+    updateTheme(current.weather_code, isNight);
+
+    document.getElementById('weatherIcon').innerHTML = getWeatherIconSVG(iconType);
+    document.getElementById('currentTemp').textContent = Math.round(current.temperature_2m);
+    document.getElementById('weatherDesc').textContent = weatherInfo.desc;
+    document.getElementById('feelsLike').textContent = Math.round(current.apparent_temperature);
+    document.getElementById('humidity').textContent = current.relative_humidity_2m;
+    document.getElementById('windSpeed').textContent = current.wind_speed_10m.toFixed(1);
+    document.getElementById('windDirection').textContent = getWindDirection(current.wind_direction_10m);
+    document.getElementById('pressure').textContent = Math.round(current.surface_pressure);
+    document.getElementById('visibility').textContent = hourly.visibility?.[0] ? (hourly.visibility[0] / 1000).toFixed(1) : '--';
+    document.getElementById('dewPoint').textContent = current.dew_point_2m ? Math.round(current.dew_point_2m) : '--';
+    document.getElementById('cloudCover').textContent = current.cloud_cover;
+    document.getElementById('cloudBar').style.width = current.cloud_cover + '%';
+    
+    const cloudBadge = document.getElementById('cloudBadge');
+    if (current.cloud_cover < 30) {
+      cloudBadge.textContent = '晴';
+      cloudBadge.className = 'detail-badge badge-good';
+    } else if (current.cloud_cover < 70) {
+      cloudBadge.textContent = '多云';
+      cloudBadge.className = 'detail-badge badge-moderate';
+    } else {
+      cloudBadge.textContent = '阴';
+      cloudBadge.className = 'detail-badge badge-moderate';
+    }
+
+    const uvIndex = hourly.uv_index?.[0] || 0;
+    document.getElementById('uvValue').textContent = uvIndex.toFixed(1);
+    const uvLevel = getUVLevel(uvIndex);
+    document.getElementById('uvBadge').textContent = uvLevel.label;
+    document.getElementById('uvBadge').className = 'detail-badge ' + uvLevel.class;
+    document.getElementById('uvBar').style.width = Math.min(uvIndex / 11 * 100, 100) + '%';
+
+    if (airQualityData && airQualityData.current) {
+      const aqi = airQualityData.current.us_aqi || 0;
+      document.getElementById('aqiValue').textContent = Math.round(aqi);
+      const aqiLevel = getAQILevel(aqi);
+      document.getElementById('aqiBadge').textContent = aqiLevel.label;
+      document.getElementById('aqiBadge').className = 'detail-badge ' + aqiLevel.class;
+      document.getElementById('aqiBar').style.width = aqiLevel.percent + '%';
+      document.getElementById('pm25Value').textContent = Math.round(airQualityData.current.pm2_5 || 0);
+      document.getElementById('pm10Value').textContent = Math.round(airQualityData.current.pm10 || 0);
+    }
+
+    document.getElementById('sunriseTime').textContent = formatTime(daily.sunrise[0]);
+    document.getElementById('sunsetTime').textContent = formatTime(daily.sunset[0]);
+    updateSunPosition(daily.sunrise[0], daily.sunset[0]);
+
+    let hourlyForChart;
+    if (minutely && minutely.time && minutely.time.length > 0) {
+      const now = new Date();
+      const startIdx = minutely.time.findIndex(t => new Date(t) >= now);
+      const start = startIdx >= 0 ? startIdx : 0;
+      const count = Math.min(5, minutely.time.length - start);
+      hourlyForChart = {
+        time: minutely.time.slice(start, start + count),
+        temperature: minutely.temperature_2m.slice(start, start + count),
+        precipitation: minutely.precipitation.slice(start, start + count),
+        precipitationProbability: minutely.precipitation_probability?.slice(start, start + count) || []
+      };
+    } else {
+      const now = new Date();
+      const startIdx = hourly.time.findIndex(t => new Date(t) >= now);
+      const start = startIdx >= 0 ? startIdx : 0;
+      hourlyForChart = {
+        time: hourly.time.slice(start, start + 7),
+        temperature: hourly.temperature_2m ? hourly.temperature_2m.slice(start, start + 7) : [],
+        precipitation: hourly.precipitation.slice(start, start + 7),
+        precipitationProbability: hourly.precipitation_probability.slice(start, start + 7)
+      };
+    }
+
+    if (hourlyForChart.time.length > 0) {
+      drawHourlyChart(hourlyForChart);
+      drawPrecipTimeline(hourlyForChart);
+      updatePrecipSummary(hourlyForChart);
+    }
+  }
+
+  // 更新降水摘要
+  function updatePrecipSummary(data) {
+    const probs = data.precipitationProbability || [];
+    const precips = data.precipitation || [];
+    const times = data.time || [];
+
+    const maxProb = probs.length > 0 ? Math.max(...probs) : 0;
+    const maxPrecip = precips.length > 0 ? Math.max(...precips) : 0;
+
+    document.getElementById('precipProbMax').textContent = Math.round(maxProb) + '%';
+    document.getElementById('precipAmountMax').textContent = maxPrecip.toFixed(1) + ' mm';
+
+    let precipTimes = [];
+    let inPrecip = false;
+    let startTime = null;
+
+    for (let i = 0; i < precips.length; i++) {
+      if (precips[i] > 0.01 && !inPrecip) {
+        inPrecip = true;
+        startTime = times[i];
+      } else if ((precips[i] <= 0.01 || i === precips.length - 1) && inPrecip) {
+        inPrecip = false;
+        precipTimes.push({ start: startTime, end: times[i] });
+      }
+    }
+
+    let periodText = '无降水';
+    if (precipTimes.length > 0) {
+      periodText = precipTimes.map(p => {
+        return formatTime(p.start) + '-' + formatTime(p.end);
+      }).join(', ');
+    }
+    document.getElementById('precipPeriod').textContent = periodText;
+  }
+
+  // 初始化
+  function init() {
+    updateClock();
+    setInterval(updateClock, 1000);
+    fetchWeatherData();
+    setInterval(fetchWeatherData, 5 * 60 * 1000);
+    setInterval(() => {
+      const sunrise = document.getElementById('sunriseTime').textContent;
+      const sunset = document.getElementById('sunsetTime').textContent;
+      if (sunrise !== '--:--' && sunset !== '--:--') {
+        const today = new Date().toDateString();
+        updateSunPosition(
+          new Date(today + ' ' + sunrise),
+          new Date(today + ' ' + sunset)
+        );
+      }
+    }, 60000);
+  }
+
+  init();
+</script>
+</body>
+</html>
